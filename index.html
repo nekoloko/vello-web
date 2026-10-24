@@ -85,6 +85,8 @@
       .booking-meta{display:flex;align-items:center;gap:9px;margin:12px 0 2px;padding:10px 2px}
       .booking-meta .grow{min-width:0}
       .booking-notice{min-height:17px;margin:4px 2px 7px;color:#725b86;font-size:11px}
+      .route-choices{display:grid;gap:7px;margin:7px 0}.route-choice{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:44px;padding:7px 11px;border:1px solid #e8e4ed;border-radius:12px;background:#fff;color:#372d42;text-align:left;font-size:12px}.route-choice.selected{border-color:#8759ae;background:#f5effa}.route-choice .small{color:#77717e;font-size:10px}
+      .traffic-alert{margin:9px 0;padding:11px;border:1px solid #d9c5eb;border-radius:14px;background:#f7f1fb;color:#3d2c4d;font-size:12px}.traffic-alert-actions{display:flex;gap:7px;margin-top:8px}.traffic-alert-actions button{flex:1;min-height:38px;font-size:11px}.traffic-accept{background:#30203f;color:#fff}.traffic-keep{background:#ece6f1;color:#513767}
       .booking-submit{min-height:50px}
       .map-picker-pin{display:none;position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-100%);width:36px;height:40px;align-items:flex-start;justify-content:center;font-size:0;pointer-events:none}
       .map-picker-pin::before{content:'';position:absolute;top:0;width:28px;height:28px;border:2px solid #fff;border-radius:50% 50% 50% 3px;background:#563574;transform:rotate(-45deg);box-shadow:0 3px 6px #0004}
@@ -160,12 +162,12 @@
     const SHARED_MAPBOX_TOKEN = 'pk.eyJ1IjoibmVrb2xva28iLCJhIjoiY212bHJ2OHh4MTY5ZzM0cHgyZnZnd3Q2ciJ9.I8ZYrymtqRW-Y-rpe1-pag';
     (() => {
       const $ = (selector) => document.querySelector(selector);
-      const state = { role: 'passenger', stage: 'home', payment: 'PIX', destination: '', destinationText: '', destinationCoordinates: null, destinationFromMap: false, pickupText: '', pickupCoordinates: null, pickupIsCurrent: true, fare: 7, estimatedMinutes: 1, estimateReady: false, estimateKey: '', bookingOpen: false, mapPicking: false, mapPickTarget: 'destination', online: false, origin: null, map: null, mapToken: '', route: null, markers: [], locationMarker: null, carMarker: null, carElement: null, carFrame: null, rating: 0, comment: '' };
+      const state = { role: 'passenger', stage: 'home', payment: 'PIX', destination: '', destinationText: '', destinationCoordinates: null, destinationFromMap: false, pickupText: '', pickupCoordinates: null, pickupIsCurrent: true, fare: 7, estimatedMinutes: 1, estimateReady: false, estimateKey: '', routeChoices: [], selectedRouteIndex: 0, selectedRoute: null, trafficAware: true, trafficSuggestion: null, trafficSuggestionMinutes: 0, trafficSuggestionOrigin: null, dismissedTrafficSignature: '', driverCurrentPosition: null, driverWatchId: null, trafficPollTimer: null, lastTrafficQueryAt: 0, lastTrafficQueryLocation: null, trafficChecking: false, bookingOpen: false, mapPicking: false, mapPickTarget: 'destination', online: false, origin: null, map: null, mapToken: '', route: null, markers: [], locationMarker: null, carMarker: null, carElement: null, carFrame: null, rating: 0, comment: '' };
       const home = [-52.7864, -28.2836];
       const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
       const fareText = () => money.format(state.fare);
       function invalidateFareEstimate() {
-        state.estimateReady=false;state.estimateKey='';
+        state.estimateReady=false;state.estimateKey='';state.routeChoices=[];state.selectedRoute=null;state.selectedRouteIndex=0;
         const fare=$('.booking-fare'),hint=$('.booking-fare-hint'),notice=$('#bookingNotice'),submit=$('.booking-submit');
         if(fare)fare.textContent=`A partir de ${money.format(7)}`;
         if(hint)hint.textContent='1 min · + R$ 1 por minuto extra';
@@ -232,17 +234,68 @@
           },error=>reject(new Error(error.code===1?'Permita o acesso à localização no Safari.':'Não foi possível obter sua localização. Confira o GPS e tente novamente.')),{enableHighAccuracy:true,timeout:15000,maximumAge:15000});
         });
       }
-      async function getDrivingRoute(origin,end) {
+      async function getDrivingRoutes(origin,end) {
         if(!state.mapToken)throw new Error('O mapa precisa do token público do Mapbox.');
         if(!state.map)initializeMap();
         if(!state.map)throw new Error('Mapa indisponível. Confira o token público e a conexão.');
-        const routeUrl=`https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${end[0]},${end[1]}?geometries=geojson&overview=full&steps=true&language=pt&access_token=${encodeURIComponent(state.mapToken)}`;
-        const routeResponse=await fetch(routeUrl);
-        if(!routeResponse.ok)throw new Error('O serviço de rotas não respondeu. Confira o token do Mapbox.');
-        const routeData=await routeResponse.json();
-        const route=routeData.routes?.[0];
-        if(!route)throw new Error('Não foi possível encontrar uma rota de carro para esse destino.');
-        return route;
+        const coordinates=`${origin[0]},${origin[1]};${end[0]},${end[1]}`;
+        const request=async profile=>{
+          const query=new URLSearchParams({geometries:'geojson',overview:'full',steps:'true',language:'pt',alternatives:'true',access_token:state.mapToken});
+          if(profile==='driving-traffic'){query.set('depart_at','now');query.set('annotations','congestion');}
+          const response=await fetch(`https://api.mapbox.com/directions/v5/mapbox/${profile}/${coordinates}?${query}`);
+          if(!response.ok)return null;
+          const data=await response.json();return data.routes?.length?data.routes:null;
+        };
+        const trafficRoutes=await request('driving-traffic');
+        if(trafficRoutes)return {routes:trafficRoutes,trafficAware:trafficRoutes.some(route=>Number.isFinite(route.duration_typical))};
+        const regularRoutes=await request('driving');
+        if(regularRoutes)return {routes:regularRoutes,trafficAware:false};
+        throw new Error('Não foi possível calcular uma rota de carro para esse destino.');
+      }
+      function drawRoutePreview(route) {
+        if(!state.map||!route)return;
+        if(!state.map.loaded()){state.map.once('load',()=>drawRoutePreview(route));return;}
+        const feature={type:'Feature',properties:{},geometry:route.geometry};
+        if(state.map.getSource('vello-route'))state.map.getSource('vello-route').setData(feature);
+        else {state.map.addSource('vello-route',{type:'geojson',data:feature});state.map.addLayer({id:'vello-route-line',type:'line',source:'vello-route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#7542a4','line-width':5,'line-opacity':0.9}});}
+        const bounds=new mapboxgl.LngLatBounds();route.geometry.coordinates.forEach(point=>bounds.extend(point));
+        const mobile=matchMedia('(max-width: 599px)').matches;
+        state.map.fitBounds(bounds,{padding:mobile?{top:110,bottom:260,left:42,right:42}:{top:48,bottom:48,left:48,right:48},maxZoom:15,duration:600});
+      }
+      function routeProgress(route,point) {
+        const points=route?.geometry?.coordinates||[];if(points.length<2)return 0;
+        const lengths=[];let total=0,nearestIndex=0,nearestDistance=Infinity;
+        for(let i=1;i<points.length;i++){const length=segmentDistance(points[i-1],points[i]);lengths.push(length);total+=length;}
+        for(let i=0;i<points.length;i++){const distance=segmentDistance(point,points[i]);if(distance<nearestDistance){nearestDistance=distance;nearestIndex=i;}}
+        const travelled=lengths.slice(0,nearestIndex).reduce((sum,value)=>sum+value,0);
+        return total?Math.min(1,travelled/total):0;
+      }
+      function stopTrafficWatch() {
+        if(state.driverWatchId!==null){navigator.geolocation?.clearWatch(state.driverWatchId);state.driverWatchId=null;}
+        if(state.trafficPollTimer){clearInterval(state.trafficPollTimer);state.trafficPollTimer=null;}
+        state.trafficChecking=false;state.driverCurrentPosition=null;state.lastTrafficQueryLocation=null;state.lastTrafficQueryAt=0;
+      }
+      async function checkTrafficRoute() {
+        if(state.role!=='driver'||state.stage!=='trip'||!state.driverCurrentPosition||!state.destinationCoordinates||state.trafficSuggestion||state.trafficChecking)return;
+        const origin=state.driverCurrentPosition.slice();state.trafficChecking=true;state.lastTrafficQueryAt=Date.now();state.lastTrafficQueryLocation=origin;
+        try {
+          const result=await getDrivingRoutes(origin,state.destinationCoordinates);if(!result.trafficAware||state.stage!=='trip')return;
+          const fastest=result.routes.slice().sort((a,b)=>a.duration-b.duration)[0];
+          const remaining=state.route?state.route.duration*(1-routeProgress(state.route,origin)):state.selectedRoute?.duration||0;
+          const savedSeconds=remaining-fastest.duration;
+          const signature=`${Math.round(fastest.duration)}:${fastest.geometry.coordinates[Math.floor(fastest.geometry.coordinates.length/2)]?.join(',')||''}`;
+          if(savedSeconds>=180&&signature!==state.dismissedTrafficSignature){state.trafficSuggestion=fastest;state.trafficSuggestionMinutes=Math.floor(savedSeconds/60);state.trafficSuggestionOrigin=origin;render();}
+        } catch(_) {} finally {state.trafficChecking=false;}
+      }
+      function startTrafficWatch() {
+        stopTrafficWatch();if(!navigator.geolocation||state.role!=='driver')return;
+        state.driverWatchId=navigator.geolocation.watchPosition(position=>{
+          if(state.stage!=='trip'||state.role!=='driver')return;
+          const point=[position.coords.longitude,position.coords.latitude],moved=state.lastTrafficQueryLocation?segmentDistance(state.lastTrafficQueryLocation,point):Infinity;
+          state.driverCurrentPosition=point;
+          if(Date.now()-state.lastTrafficQueryAt>=45000||moved>=300)checkTrafficRoute();
+        },()=>{},{enableHighAccuracy:true,maximumAge:10000,timeout:20000});
+        state.trafficPollTimer=setInterval(()=>{if(state.driverCurrentPosition&&Date.now()-state.lastTrafficQueryAt>=60000)checkTrafficRoute();},60000);
       }
       function stopCarAnimation() { if(state.carFrame)cancelAnimationFrame(state.carFrame);state.carFrame=null; }
       function clearRoute() {
@@ -284,14 +337,19 @@
         if(!state.mapToken||!state.map){$('#mapTag').textContent=label;mapStatus('Ative o mapa para visualizar a rota.',true);return false;}
         try {
           $('#mapTag').textContent=`${label} · calculando rota`;
-          const route=await getDrivingRoute(origin,end);
+          const routeSet=await getDrivingRoutes(origin,end);
+          const candidates=routeSet.routes.slice().sort((a,b)=>a.duration-b.duration);
+          let route=stageName==='trip'&&state.selectedRoute?state.selectedRoute:candidates[0];
+          if(stageName==='trip'&&state.role==='driver'&&state.selectedRoute&&routeSet.trafficAware){
+            const savedSeconds=state.selectedRoute.duration-candidates[0].duration;
+            if(savedSeconds>=180){state.trafficSuggestion=candidates[0];state.trafficSuggestionMinutes=Math.floor(savedSeconds/60);render();route=state.selectedRoute;}
+            else state.trafficSuggestion=null;
+          }
           if(state.stage!==stageName)return false;
           if(!state.map.loaded())await new Promise(resolve=>state.map.once('load',resolve));
           if(state.stage!==stageName)return false;
           clearRoute();state.route=route;
-          const feature={type:'Feature',properties:{},geometry:route.geometry};
-          if(state.map.getSource('vello-route'))state.map.getSource('vello-route').setData(feature);
-          else {state.map.addSource('vello-route',{type:'geojson',data:feature});state.map.addLayer({id:'vello-route-line',type:'line',source:'vello-route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#7542a4','line-width':5,'line-opacity':0.9}});}
+          drawRoutePreview(route);
           const targetDot=document.createElement('div');targetDot.className='vello-pickup-dot';targetDot.setAttribute('aria-label',label.includes('destino')?'Destino':'Ponto de embarque');
           state.markers.push(new mapboxgl.Marker({element:targetDot,anchor:'center'}).setLngLat(end).addTo(state.map));
           ensureCarMarker(route.geometry.coordinates[0]);
@@ -301,7 +359,7 @@
           const km=(route.distance/1000).toLocaleString('pt-BR',{maximumFractionDigits:1});
           const minutes=Math.max(1,Math.round(route.duration/60));
           $('#mapTag').textContent=`${label} · ${km} km · ${minutes} min`;
-          $('#mapStatus').hidden=true;animateCar(route,stageName);return true;
+          $('#mapStatus').hidden=true;animateCar(route,stageName);if(stageName==='trip'&&state.role==='driver')startTrafficWatch();return true;
         } catch(error) { if(state.stage===stageName)mapStatus(error.message||'Não consegui mostrar a rota.');return false; }
       }
       function showWaitingAtPickup(pickup) {
@@ -313,7 +371,7 @@
       function routeForStage(stageName) {
         const pickup=pickupForDemo(),destination=destinationForDemo();
         if(stageName==='found'||stageName==='pickup')return showTravelLeg([pickup[0]-0.009,pickup[1]+0.006],pickup,'Motorista a caminho',stageName);
-        if(stageName==='trip')return showTravelLeg(pickup,destination,'Indo ao destino',stageName);
+        if(stageName==='trip')return showTravelLeg(state.role==='driver'&&state.driverCurrentPosition?state.driverCurrentPosition:pickup,destination,'Indo ao destino',stageName);
         if(stageName==='arrived'||stageName==='awaiting')showWaitingAtPickup(pickup);
         if(stageName==='done'||stageName==='earnings'){
           clearRoute();removeCarMarker();
@@ -321,6 +379,8 @@
         }
       }
       function enterStage(next) {
+        if(next!=='trip')stopTrafficWatch();
+        if(next==='trip'){state.driverCurrentPosition=null;state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;}
         state.stage=next;
         if(next==='home'&&state.role==='driver')state.online=true;
         render();save();routeForStage(next);
@@ -331,7 +391,10 @@
         $('#locationLabel').textContent=state.mapPicking?'Mova o mapa até o ponto':(state.destinationText||'Minha localização');
         $('#onlineBadge').hidden = !driver || !state.online;
         const passengerHome = `<button class="primary home-request" data-action="open-booking">Pedir corrida</button>`;
-        const booking = `<section class="booking-sheet"><div class="booking-head"><button class="booking-back" type="button" data-action="close-booking" aria-label="Voltar">‹</button><div><h1 class="booking-title">Sua corrida</h1><p class="booking-subtitle">Escolha onde buscar e para onde ir.</p></div></div><div class="route-fields"><div class="route-field"><span class="route-dot"></span><div class="grow"><span class="eyebrow">ORIGEM</span><input id="pickupInput" autocomplete="street-address" value="${safe(state.pickupText || (state.pickupIsCurrent ? (state.origin?'Minha localização':'Obtendo localização…') : ''))}" placeholder="Digite o endereço de partida"></div><button class="field-icon" type="button" data-action="pick-pickup" aria-label="Escolher origem no mapa">⌖</button></div><div class="route-field"><span class="route-dest-icon"></span><div class="grow"><span class="eyebrow">DESTINO</span><input id="destinationInput" autocomplete="street-address" value="${safe(state.destinationText)}" placeholder="Para onde você vai?"></div><button class="field-icon" type="button" data-action="pick-destination" aria-label="Escolher destino no mapa">⌖</button></div></div><div class="booking-meta"><div class="car">▰</div><div class="grow"><div class="strong">Vello Econômico</div><div class="small booking-fare-hint">${state.estimateReady?`${state.estimatedMinutes} min estimados`:'1 min · + R$ 1 por minuto extra'}</div></div><div class="price booking-fare">${state.estimateReady?fareText():`A partir de ${money.format(7)}`}</div></div><div class="payments">${['PIX','Cartão','Dinheiro'].map(p=>`<button type="button" data-pay="${p}" class="${state.payment===p?'selected':''}" aria-pressed="${state.payment===p}">${p}</button>`).join('')}</div><p class="booking-notice" id="bookingNotice">${state.estimateReady?`Estimativa da rota: ${state.estimatedMinutes} min · ${fareText()}. Toque em confirmar para pedir.`:'A estimativa será calculada pelo tempo da rota.'}</p><button class="primary booking-submit" data-action="request">${state.estimateReady?'Confirmar corrida':'Pedir corrida'}</button></section>`;
+        const showRouteChoices=state.estimateReady&&state.routeChoices.some((route,index)=>index>0&&route.duration-state.routeChoices[0].duration>=180);
+        const routeChoicesMarkup=showRouteChoices?`<div class="route-choices" aria-label="Rotas alternativas">${state.routeChoices.map((route,index)=>{const minutes=Math.max(1,Math.ceil(route.duration/60)),delta=minutes-Math.max(1,Math.ceil(state.routeChoices[0].duration/60)),label=index===0?`Mais rápida${state.trafficAware?' · trânsito':''}`:`Alternativa${delta>0?` · +${delta} min`:''}`;return `<button type="button" class="route-choice ${index===state.selectedRouteIndex?'selected':''}" data-action="choose-route" data-route-index="${index}" aria-pressed="${index===state.selectedRouteIndex}"><span><strong>${label}</strong><span class="small"> · ${minutes} min</span></span><strong>${money.format(7+Math.max(0,minutes-1))}</strong></button>`;}).join('')}</div>`:'';
+        const bookingNotice=state.estimateReady?`Rota estimada em ${state.estimatedMinutes} min · ${fareText()}${state.trafficAware?' com trânsito considerado':', sem dados atuais de trânsito'}. ${showRouteChoices?'Escolha a rota desejada.':'Toque em confirmar para pedir.'}`:'A estimativa será calculada pelo tempo da rota.';
+        const booking = `<section class="booking-sheet"><div class="booking-head"><button class="booking-back" type="button" data-action="close-booking" aria-label="Voltar">‹</button><div><h1 class="booking-title">Sua corrida</h1><p class="booking-subtitle">Escolha onde buscar e para onde ir.</p></div></div><div class="route-fields"><div class="route-field"><span class="route-dot"></span><div class="grow"><span class="eyebrow">ORIGEM</span><input id="pickupInput" autocomplete="street-address" value="${safe(state.pickupText || (state.pickupIsCurrent ? (state.origin?'Minha localização':'Obtendo localização…') : ''))}" placeholder="Digite o endereço de partida"></div><button class="field-icon" type="button" data-action="pick-pickup" aria-label="Escolher origem no mapa">⌖</button></div><div class="route-field"><span class="route-dest-icon"></span><div class="grow"><span class="eyebrow">DESTINO</span><input id="destinationInput" autocomplete="street-address" value="${safe(state.destinationText)}" placeholder="Para onde você vai?"></div><button class="field-icon" type="button" data-action="pick-destination" aria-label="Escolher destino no mapa">⌖</button></div></div><div class="booking-meta"><div class="car">▰</div><div class="grow"><div class="strong">Vello Econômico</div><div class="small booking-fare-hint">${state.estimateReady?`${state.estimatedMinutes} min estimados`:'1 min · + R$ 1 por minuto extra'}</div></div><div class="price booking-fare">${state.estimateReady?fareText():`A partir de ${money.format(7)}`}</div></div><div class="payments">${['PIX','Cartão','Dinheiro'].map(p=>`<button type="button" data-pay="${p}" class="${state.payment===p?'selected':''}" aria-pressed="${state.payment===p}">${p}</button>`).join('')}</div>${routeChoicesMarkup}<p class="booking-notice" id="bookingNotice">${bookingNotice}</p><button class="primary booking-submit" data-action="request">${state.estimateReady?'Confirmar corrida':'Pedir corrida'}</button></section>`;
         const pickerLabel=state.mapPickTarget==='pickup'?'embarque':'destino';
         const picker = `<section class="picker-sheet"><p class="picker-instruction">Arraste o mapa até o ponto de ${pickerLabel}.</p><div class="picker-actions"><button type="button" class="picker-cancel" data-action="cancel-pick">Voltar</button><button type="button" class="primary" data-action="confirm-pick">Concluir local</button></div></section>`;
         const driverHome = `<h1 class="title">${state.online?'Você está online':'Pronto para dirigir?'}</h1><p class="hint">${state.online?'Solicitações de teste aparecem aqui.':'Fique online para receber uma corrida simulada.'}</p><section class="panel"><div class="row"><div class="car">▰</div><div class="grow"><div class="small">Ganhos de hoje</div><div class="strong" style="font-size:23px">R$ 0,00</div></div><div class="small">0 corridas</div></div><button class="primary" data-action="online">${state.online?'Simular solicitação':'Ficar online'}</button></section><p class="notice">Demonstração local · sem corridas reais.</p>`;
@@ -343,7 +406,7 @@
         document.body.classList.toggle('passenger-receipt',!driver&&state.stage==='done');
         if(state.stage==='home') $('#screen').innerHTML=driver?driverHome:(state.mapPicking?picker:(state.bookingOpen?booking:passengerHome));
         else if(!driver&&state.stage==='done')$('#screen').innerHTML=receipt;
-        else { const item=flows[state.stage]; const final=['earnings'].includes(state.stage); $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div><p class="stage-copy">${item[1]}</p><button class="primary" data-action="next" data-next="${item[4]}">${item[2]}</button>${final?'':'<button class="secondary" data-action="cancel">Cancelar demonstração</button>'}</section>`; }
+        else { const item=flows[state.stage]; const final=['earnings'].includes(state.stage); const trafficAlert=driver&&state.stage==='trip'&&state.trafficSuggestion?`<div class="traffic-alert"><strong>Rota mais rápida encontrada</strong><div>Esta opção economiza cerca de ${state.trafficSuggestionMinutes} min.</div><div class="traffic-alert-actions"><button class="traffic-accept" data-action="accept-traffic">Usar rota</button><button class="traffic-keep" data-action="dismiss-traffic">Manter atual</button></div></div>`:''; $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div>${trafficAlert}<p class="stage-copy">${item[1]}</p><button class="primary" data-action="next" data-next="${item[4]}">${item[2]}</button>${final?'':'<button class="secondary" data-action="cancel">Cancelar demonstração</button>'}</section>`; }
       }
       async function requestRide(button) {
         const pickupField=$('#pickupInput'),destinationField=$('#destinationInput');
@@ -359,11 +422,16 @@
           if(!state.destinationCoordinates){const place=await forwardGeocode(state.destinationText,origin);state.destinationCoordinates=place.coordinates;}
           const estimateKey=JSON.stringify([origin,state.destinationCoordinates]);
           if(!state.estimateReady||state.estimateKey!==estimateKey){
-            const route=await getDrivingRoute(origin,state.destinationCoordinates);
+            const routeSet=await getDrivingRoutes(origin,state.destinationCoordinates);
+            state.routeChoices=routeSet.routes.slice().sort((a,b)=>a.duration-b.duration);
+            state.selectedRouteIndex=0;state.selectedRoute=state.routeChoices[0];state.trafficAware=routeSet.trafficAware;
+            const route=state.selectedRoute;
             const minutes=Math.max(1,Math.ceil(route.duration/60));
             state.estimatedMinutes=minutes;state.fare=7+Math.max(0,minutes-1);state.estimateReady=true;state.estimateKey=estimateKey;
             render();
-            $('#bookingNotice').textContent=`Estimativa da rota: ${minutes} min · ${fareText()}. Toque em confirmar para pedir.`;
+            drawRoutePreview(route);
+            const hasAlternatives=state.routeChoices.some((candidate,index)=>index>0&&candidate.duration-route.duration>=180);
+            $('#bookingNotice').textContent=`Rota estimada em ${minutes} min · ${fareText()}${state.trafficAware?' com trânsito considerado':', sem dados atuais de trânsito'}. ${hasAlternatives?'Escolha a rota desejada.':'Toque em confirmar para pedir.'}`;
             return;
           }
           state.destination=state.destinationText;
@@ -373,6 +441,7 @@
       function save() { try { localStorage.setItem('vello-demo', JSON.stringify({role:state.role,payment:state.payment,destination:state.destinationFromMap?'':state.destination,destinationText:state.destinationFromMap?'':state.destinationText,pickupText:state.pickupIsCurrent?'':state.pickupText,pickupCoordinates:state.pickupIsCurrent?null:state.pickupCoordinates,pickupIsCurrent:state.pickupIsCurrent})); } catch (_) {} }
       function update(event) {
         const rating=event.target.closest('[data-rating]');if(rating){state.rating=Number(rating.dataset.rating);render();return;}
+        const routeChoice=event.target.closest('[data-action="choose-route"]');if(routeChoice){const index=Number(routeChoice.dataset.routeIndex),route=state.routeChoices[index];if(!route)return;state.selectedRouteIndex=index;state.selectedRoute=route;state.estimatedMinutes=Math.max(1,Math.ceil(route.duration/60));state.fare=7+Math.max(0,state.estimatedMinutes-1);render();drawRoutePreview(route);$('#bookingNotice').textContent=`Rota selecionada: ${state.estimatedMinutes} min · ${fareText()}${state.trafficAware?' com trânsito considerado':', sem dados atuais de trânsito'}. Toque em confirmar para pedir.`;return;}
         const pay=event.target.closest('[data-pay]'); if(pay){state.payment=pay.dataset.pay;render();save();return;}
         const button=event.target.closest('[data-action]'); if(!button)return;
         if(button.dataset.action==='open-booking'){state.bookingOpen=true;render();return;}
@@ -388,8 +457,10 @@
         if(button.dataset.action==='online'){if(!state.online)state.online=true;else state.stage='request';}
         if(button.dataset.action==='request'){requestRide(button);return;}
         if(button.dataset.action==='next'){enterStage(button.dataset.next);return;}
-        if(button.dataset.action==='finish-review'){state.stage='home';state.bookingOpen=false;state.mapPicking=false;state.destination='';state.destinationText='';state.destinationCoordinates=null;state.destinationFromMap=false;state.pickupText='';state.pickupIsCurrent=true;state.pickupCoordinates=state.origin;state.rating=0;state.comment='';clearRoute();render();save();return;}
-        if(button.dataset.action==='cancel'){state.stage='home';clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
+        if(button.dataset.action==='accept-traffic'){const route=state.trafficSuggestion;if(route){state.selectedRoute=route;if(state.trafficSuggestionOrigin)state.driverCurrentPosition=state.trafficSuggestionOrigin;}state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;state.dismissedTrafficSignature='';render();routeForStage('trip');return;}
+        if(button.dataset.action==='dismiss-traffic'){const route=state.trafficSuggestion;if(route)state.dismissedTrafficSignature=`${Math.round(route.duration)}:${route.geometry.coordinates[Math.floor(route.geometry.coordinates.length/2)]?.join(',')||''}`;state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;state.lastTrafficQueryAt=Date.now();render();return;}
+        if(button.dataset.action==='finish-review'){state.stage='home';state.bookingOpen=false;state.mapPicking=false;state.destination='';state.destinationText='';state.destinationCoordinates=null;state.destinationFromMap=false;state.pickupText='';state.pickupIsCurrent=true;state.pickupCoordinates=state.origin;state.routeChoices=[];state.selectedRoute=null;state.selectedRouteIndex=0;state.trafficSuggestion=null;state.estimateReady=false;state.estimateKey='';state.fare=7;state.estimatedMinutes=1;state.rating=0;state.comment='';clearRoute();render();save();return;}
+        if(button.dataset.action==='cancel'){stopTrafficWatch();state.stage='home';clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
         render();save();
       }
       $('#screen').addEventListener('click', update);
@@ -404,7 +475,7 @@
       $('#mapStatus').addEventListener('click',event=>{if(event.target.id==='setupMap')openMapSetup();});
       $('#cancelMapSetup').addEventListener('click',()=>$('#mapDialog').close());
       $('#mapTokenForm').addEventListener('submit',event=>{event.preventDefault();const token=$('#mapTokenInput').value.trim();if(!token.startsWith('pk.')){mapStatus('Use um token público Mapbox, que começa com pk.',true);return;}$('#mapDialog').close();setMapToken(token);});
-        $('#roleToggle').addEventListener('click',()=>{clearRoute();removeCarMarker();state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.online=false;state.bookingOpen=false;state.mapPicking=false;render();save();});
+        $('#roleToggle').addEventListener('click',()=>{stopTrafficWatch();clearRoute();removeCarMarker();state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.online=false;state.bookingOpen=false;state.mapPicking=false;render();save();});
       try{const saved=JSON.parse(localStorage.getItem('vello-demo')||'{}');state.role=saved.role==='driver'?'driver':'passenger';state.payment=saved.payment||state.payment;state.destination=saved.destination||'';state.destinationText=saved.destinationText||saved.destination||'';state.pickupText=saved.pickupText||'';state.pickupCoordinates=Array.isArray(saved.pickupCoordinates)?saved.pickupCoordinates:null;state.pickupIsCurrent=saved.pickupIsCurrent!==false;}catch(_){}
       try{state.mapToken=SHARED_MAPBOX_TOKEN||localStorage.getItem('vello-map-token')||'';}catch(_){}
       if(SHARED_MAPBOX_TOKEN)$('#mapSettings').hidden=true;
