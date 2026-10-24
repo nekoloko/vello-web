@@ -98,6 +98,52 @@
       .picker-instruction{margin:0 0 9px;color:#4d4655;font-size:13px}
       .picker-actions{display:flex;gap:8px}.picker-actions button{flex:1}
       .picker-cancel{background:#f1edf5;color:#513767}
+      .passenger-receipt .tabbar{display:none}
+      .passenger-receipt #screen{bottom:calc(env(safe-area-inset-bottom) + 10px);max-height:calc(100% - env(safe-area-inset-top) - 74px);overflow:auto}
+      .receipt-sheet{padding:20px 18px;border:1px solid #ebe8ef;border-radius:23px;background:#fff;color:#211d26;box-shadow:0 8px 28px #1c19301c}
+      .receipt-kicker{text-align:center;color:#77717e;font-size:13px}
+      .receipt-amount{margin:2px 0 0;text-align:center;color:#211d26;font-size:clamp(48px,14vw,66px);line-height:1.08;letter-spacing:-2px;font-weight:850}
+      .receipt-payment{text-align:center;color:#77717e;font-size:12px;margin:4px 0 16px}
+      .receipt-divider{height:1px;background:#eeeaf1;margin:13px 0}
+      .driver-card{display:flex;align-items:center;gap:12px}
+      .driver-photo{width:54px;height:54px;border:2px solid #eee8f3;border-radius:50%;object-fit:cover;background:#e9dff1}
+      .driver-fallback{display:none;width:54px;height:54px;place-items:center;border-radius:50%;background:#eee8f3;color:#59377b;font-weight:800;font-size:20px}
+      .driver-name{color:#211d26;font-size:15px;font-weight:750}
+      .driver-car{margin-top:2px;color:#77717e;font-size:12px}
+      .review-label{margin:2px 0 6px;color:#4d4655;font-size:13px;font-weight:650}
+      .review-stars{display:flex;justify-content:center;gap:9px;margin:5px 0 9px}
+      .review-stars button{min-height:42px;padding:0 2px;background:transparent;color:#d7d2dc;font-size:30px}
+      .review-stars button.active{color:#f4b83f}
+      .review-comment{width:100%;min-height:66px;resize:vertical;border:1px solid #e9e5ed;border-radius:13px;padding:10px 12px;background:#fff;color:#211d26;font-size:13px;outline:none}
+      .review-comment::placeholder{color:#99939e}
+      .review-submit{margin-top:10px;min-height:48px}
+      .review-thanks{text-align:center;color:#59377b;font-size:13px;margin:10px 0 0}
+    }
+    .vello-pickup-dot{width:13px;height:13px;border:3px solid #fff;border-radius:50%;background:#563574;box-shadow:0 1px 5px #2225}
+    .vello-car-marker{display:grid;place-items:center;width:38px;height:48px;pointer-events:none}
+    .vello-car-rotator{display:block;width:34px;height:44px;transform:rotate(0deg);transition:transform .09s linear;filter:drop-shadow(0 3px 3px #1a112355)}
+    .vello-car-rotator svg{display:block;width:100%;height:100%;overflow:visible}
+    .receipt-sheet{padding:22px 20px;border:1px solid #ebe8ef;border-radius:23px;background:#fff;color:#211d26;box-shadow:0 8px 28px #1c19301c}
+    .receipt-kicker{text-align:center;color:#77717e;font-size:13px}
+    .receipt-amount{margin:2px 0 0;text-align:center;color:#211d26;font-size:64px;line-height:1.08;letter-spacing:-2px;font-weight:850}
+    .receipt-payment{text-align:center;color:#77717e;font-size:12px;margin:4px 0 16px}
+    .receipt-divider{height:1px;background:#eeeaf1;margin:13px 0}
+    .driver-card{display:flex;align-items:center;gap:12px}
+    .driver-photo,.driver-fallback{width:54px;height:54px;border:2px solid #eee8f3;border-radius:50%;object-fit:cover;background:#e9dff1}
+    .driver-fallback{display:none;place-items:center;color:#59377b;font-weight:800;font-size:20px}
+    .driver-name{color:#211d26;font-size:15px;font-weight:750}.driver-car{margin-top:2px;color:#77717e;font-size:12px}
+    .review-label{display:block;margin:2px 0 6px;color:#4d4655;font-size:13px;font-weight:650}
+    .review-stars{display:flex;justify-content:center;gap:9px;margin:5px 0 9px}
+    .review-stars button{min-height:42px;padding:0 2px;background:transparent;color:#d7d2dc;font-size:30px}
+    .review-stars button.active{color:#f4b83f}
+    .review-comment{width:100%;min-height:66px;resize:vertical;border:1px solid #e9e5ed;border-radius:13px;padding:10px 12px;background:#fff;color:#211d26;font-size:13px;outline:none}
+    .review-comment::placeholder{color:#99939e}.review-submit{margin-top:10px;min-height:48px}
+    @media(max-width:599px){
+      .passenger-receipt .map{display:none}
+      .passenger-receipt .top{position:relative;top:auto;left:auto;right:auto;margin:calc(env(safe-area-inset-top) + 7px) 14px 10px}
+      .passenger-receipt #screen{top:calc(env(safe-area-inset-top) + 72px);bottom:0;left:0;right:0;max-height:none;overflow:auto;padding:12px 13px calc(env(safe-area-inset-bottom) + 16px);border-radius:24px 24px 0 0;background:#f5f5f7}
+      .passenger-receipt .receipt-sheet{padding:19px 17px}
+      .passenger-receipt .receipt-amount{font-size:clamp(48px,14vw,66px)}
     }
   </style>
 </head>
@@ -114,7 +160,7 @@
     const SHARED_MAPBOX_TOKEN = 'pk.eyJ1IjoibmVrb2xva28iLCJhIjoiY212bHJ2OHh4MTY5ZzM0cHgyZnZnd3Q2ciJ9.I8ZYrymtqRW-Y-rpe1-pag';
     (() => {
       const $ = (selector) => document.querySelector(selector);
-      const state = { role: 'passenger', stage: 'home', payment: 'PIX', destination: '', destinationText: '', destinationCoordinates: null, destinationFromMap: false, pickupText: '', pickupCoordinates: null, pickupIsCurrent: true, bookingOpen: false, mapPicking: false, online: false, origin: null, map: null, mapToken: '', route: null, markers: [], locationMarker: null };
+      const state = { role: 'passenger', stage: 'home', payment: 'PIX', destination: '', destinationText: '', destinationCoordinates: null, destinationFromMap: false, pickupText: '', pickupCoordinates: null, pickupIsCurrent: true, bookingOpen: false, mapPicking: false, online: false, origin: null, map: null, mapToken: '', route: null, markers: [], locationMarker: null, carMarker: null, carElement: null, carFrame: null, rating: 0, comment: '' };
       const home = [-52.7864, -28.2836];
       const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
       const price = money.format(18.90);
@@ -125,7 +171,7 @@
         if (!window.mapboxgl) { mapStatus('Não foi possível carregar o mapa. Verifique sua conexão.'); return; }
         state.mapToken = state.mapToken.trim();
         mapboxgl.accessToken = state.mapToken;
-        if (state.map) { state.map.remove(); state.map = null; }
+        if (state.map) { clearRoute();state.markers.forEach(marker=>marker.remove());state.markers=[];state.carMarker?.remove();state.carMarker=null;state.carElement=null;state.locationMarker?.remove();state.locationMarker=null;state.map.remove(); state.map = null; }
         mapStatus('Carregando mapa…');
         try {
           state.map = new mapboxgl.Map({container:'mapCanvas',style:'mapbox://styles/mapbox/light-v11',center:state.origin||home,zoom:13,attributionControl:true,dragRotate:false,touchPitch:false,pitchWithRotate:false});
@@ -178,35 +224,98 @@
           },error=>reject(new Error(error.code===1?'Permita o acesso à localização no Safari.':'Não foi possível obter sua localização. Confira o GPS e tente novamente.')),{enableHighAccuracy:true,timeout:15000,maximumAge:15000});
         });
       }
-      async function calculateRoute(origin,end) {
-        if(!state.mapToken){openMapSetup();return false;}
-        if(!state.map){initializeMap();}
-        if(!state.map){mapStatus('Mapa indisponível. Confira o token público e a conexão.');return false;}
+      async function getDrivingRoute(origin,end) {
+        if(!state.mapToken)throw new Error('O mapa precisa do token público do Mapbox.');
+        if(!state.map)initializeMap();
+        if(!state.map)throw new Error('Mapa indisponível. Confira o token público e a conexão.');
+        const routeUrl=`https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${end[0]},${end[1]}?geometries=geojson&overview=full&steps=true&language=pt&access_token=${encodeURIComponent(state.mapToken)}`;
+        const routeResponse=await fetch(routeUrl);
+        if(!routeResponse.ok)throw new Error('O serviço de rotas não respondeu. Confira o token do Mapbox.');
+        const routeData=await routeResponse.json();
+        const route=routeData.routes?.[0];
+        if(!route)throw new Error('Não foi possível encontrar uma rota de carro para esse destino.');
+        return route;
+      }
+      function stopCarAnimation() { if(state.carFrame)cancelAnimationFrame(state.carFrame);state.carFrame=null; }
+      function clearRoute() {
+        stopCarAnimation();
+        if(state.map?.getSource('vello-route'))state.map.getSource('vello-route').setData({type:'Feature',properties:{},geometry:{type:'LineString',coordinates:[]}});
+        state.markers.forEach(marker=>marker.remove());state.markers=[];state.route=null;
+      }
+      function removeCarMarker() { state.carMarker?.remove();state.carMarker=null;state.carElement=null; }
+      function ensureCarMarker(coordinates) {
+        if(!state.map||!window.mapboxgl)return;
+        if(!state.carMarker){
+          const root=document.createElement('div');root.className='vello-car-marker';root.setAttribute('aria-label','Carro do motorista');
+          root.innerHTML='<span class="vello-car-rotator"><svg viewBox="0 0 44 58" role="img" aria-hidden="true"><defs><linearGradient id="carPaint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b984f4"/><stop offset=".48" stop-color="#7542a4"/><stop offset="1" stop-color="#402255"/></linearGradient><linearGradient id="carGlass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e8dcff"/><stop offset="1" stop-color="#9d84ba"/></linearGradient></defs><ellipse cx="8" cy="17" rx="3" ry="6" fill="#201829"/><ellipse cx="36" cy="17" rx="3" ry="6" fill="#201829"/><ellipse cx="8" cy="41" rx="3" ry="6" fill="#201829"/><ellipse cx="36" cy="41" rx="3" ry="6" fill="#201829"/><path d="M14 3h16c3 0 5 2 6 6l4 13v20c0 5-3 9-8 11H12c-5-2-8-6-8-11V22l4-13c1-4 3-6 6-6Z" fill="url(#carPaint)" stroke="#392148" stroke-width="1.5"/><path d="m13 10 3-4h12l3 4 3 12H10l3-12Z" fill="url(#carGlass)" stroke="#f0e7ff" stroke-width="1.2"/><path d="M10 25h24v13H10z" rx="4" fill="#4a315e" stroke="#c7a4f2" stroke-width="1.2"/><path d="M12 43h20l-3 6H15l-3-6Z" fill="#8f61bd"/><path d="M12 7h4M28 7h4" stroke="#fff1c2" stroke-width="2.5" stroke-linecap="round"/><path d="M14 51h16" stroke="#d6b6ff" stroke-width="1.5" stroke-linecap="round"/></svg></span>';
+          state.carElement=root.querySelector('.vello-car-rotator');
+          state.carMarker=new mapboxgl.Marker({element:root,anchor:'center',rotationAlignment:'viewport'}).setLngLat(coordinates).addTo(state.map);
+        } else state.carMarker.setLngLat(coordinates).addTo(state.map);
+      }
+      function radians(value) { return value*Math.PI/180; }
+      function segmentDistance(a,b) { const lat1=radians(a[1]),lat2=radians(b[1]),dLat=lat2-lat1,dLon=radians(b[0]-a[0]);const h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;return 6371000*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h)); }
+      function segmentBearing(a,b) { const lat1=radians(a[1]),lat2=radians(b[1]),dLon=radians(b[0]-a[0]);return (Math.atan2(Math.sin(dLon)*Math.cos(lat2),Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon))*180/Math.PI+360)%360; }
+      function animateCar(route,stageName) {
+        stopCarAnimation();const points=route.geometry.coordinates;const lengths=[];let total=0;
+        for(let i=1;i<points.length;i++){const length=segmentDistance(points[i-1],points[i]);lengths.push(length);total+=length;}
+        if(!points.length)return;ensureCarMarker(points[0]);
+        if(points.length<2||total<1){state.carMarker.setLngLat(points.at(-1));return;}
+        const duration=Math.max(9000,Math.min(18000,total*1.8));let started=null;
+        const frame=now=>{
+          if(state.stage!==stageName||!state.carMarker)return;
+          if(started===null)started=now;const progress=Math.min(1,(now-started)/duration);let target=total*progress,index=0;
+          while(index<lengths.length-1&&target>lengths[index]){target-=lengths[index];index++;}
+          const segment=lengths[index]||1,ratio=Math.min(1,target/segment),a=points[index],b=points[index+1]||a;
+          state.carMarker.setLngLat([a[0]+(b[0]-a[0])*ratio,a[1]+(b[1]-a[1])*ratio]);
+          if(state.carElement)state.carElement.style.transform=`rotate(${segmentBearing(a,b)}deg)`;
+          if(progress<1)state.carFrame=requestAnimationFrame(frame);else state.carFrame=null;
+        };
+        state.carFrame=requestAnimationFrame(frame);
+      }
+      async function showTravelLeg(origin,end,label,stageName) {
+        if(!state.mapToken||!state.map){$('#mapTag').textContent=label;mapStatus('Ative o mapa para visualizar a rota.',true);return false;}
         try {
-          mapStatus('Calculando a melhor rota…');
-          const routeUrl=`https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${end[0]},${end[1]}?geometries=geojson&overview=full&steps=true&language=pt&access_token=${encodeURIComponent(state.mapToken)}`;
-          const routeResponse=await fetch(routeUrl);
-          if(!routeResponse.ok)throw new Error('O serviço de rotas não respondeu. Confira o token do Mapbox.');
-          const routeData=await routeResponse.json();
-          const route=routeData.routes?.[0];
-          if(!route)throw new Error('Não foi possível encontrar uma rota de carro para esse destino.');
-          state.route=route;
+          $('#mapTag').textContent=`${label} · calculando rota`;
+          const route=await getDrivingRoute(origin,end);
+          if(state.stage!==stageName)return false;
           if(!state.map.loaded())await new Promise(resolve=>state.map.once('load',resolve));
+          if(state.stage!==stageName)return false;
+          clearRoute();state.route=route;
           const feature={type:'Feature',properties:{},geometry:route.geometry};
           if(state.map.getSource('vello-route'))state.map.getSource('vello-route').setData(feature);
-          else {state.map.addSource('vello-route',{type:'geojson',data:feature});state.map.addLayer({id:'vello-route-line',type:'line',source:'vello-route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#563574','line-width':5,'line-opacity':0.92}});}
-          state.markers.forEach(marker=>marker.remove());state.markers=[];
-          showLocationMarker(origin);
-          const destinationDot=document.createElement('div');destinationDot.className='vello-destination-dot';destinationDot.setAttribute('aria-label','Destino');
-          state.markers.push(new mapboxgl.Marker({element:destinationDot,anchor:'bottom'}).setLngLat(end).addTo(state.map));
+          else {state.map.addSource('vello-route',{type:'geojson',data:feature});state.map.addLayer({id:'vello-route-line',type:'line',source:'vello-route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#7542a4','line-width':5,'line-opacity':0.9}});}
+          const targetDot=document.createElement('div');targetDot.className='vello-pickup-dot';targetDot.setAttribute('aria-label',label.includes('destino')?'Destino':'Ponto de embarque');
+          state.markers.push(new mapboxgl.Marker({element:targetDot,anchor:'center'}).setLngLat(end).addTo(state.map));
+          ensureCarMarker(route.geometry.coordinates[0]);
           const bounds=new mapboxgl.LngLatBounds();route.geometry.coordinates.forEach(point=>bounds.extend(point));
-          state.map.fitBounds(bounds,{padding:{top:55,bottom:55,left:45,right:45},maxZoom:15,duration:700});
+          const mobile=matchMedia('(max-width: 599px)').matches;
+          state.map.fitBounds(bounds,{padding:mobile?{top:102,bottom:245,left:40,right:40}:{top:48,bottom:48,left:48,right:48},maxZoom:15,duration:800});
           const km=(route.distance/1000).toLocaleString('pt-BR',{maximumFractionDigits:1});
           const minutes=Math.max(1,Math.round(route.duration/60));
-          $('#mapTag').textContent=`${km} km · cerca de ${minutes} min`;
-          $('#mapStatus').hidden=true;
-          return true;
-        } catch(error) { mapStatus(error.message||'Erro ao calcular a rota. Tente novamente.');return false; }
+          $('#mapTag').textContent=`${label} · ${km} km · ${minutes} min`;
+          $('#mapStatus').hidden=true;animateCar(route,stageName);return true;
+        } catch(error) { if(state.stage===stageName)mapStatus(error.message||'Não consegui mostrar a rota.');return false; }
+      }
+      function showWaitingAtPickup(pickup) {
+        clearRoute();if(pickup)ensureCarMarker(pickup);if(state.carElement)state.carElement.style.transform='rotate(0deg)';
+        $('#mapTag').textContent='Aguardando passageiro';$('#mapStatus').hidden=true;
+      }
+      function pickupForDemo() { const point=state.pickupCoordinates||state.origin||home;state.pickupCoordinates=point;return point; }
+      function destinationForDemo() { if(!state.destinationCoordinates){const point=pickupForDemo();state.destinationCoordinates=[point[0]+0.012,point[1]+0.006];state.destination='Centro, Carazinho';}return state.destinationCoordinates; }
+      function routeForStage(stageName) {
+        const pickup=pickupForDemo(),destination=destinationForDemo();
+        if(stageName==='found'||stageName==='pickup')return showTravelLeg([pickup[0]-0.009,pickup[1]+0.006],pickup,'Motorista a caminho',stageName);
+        if(stageName==='trip')return showTravelLeg(pickup,destination,'Indo ao destino',stageName);
+        if(stageName==='arrived'||stageName==='awaiting')showWaitingAtPickup(pickup);
+        if(stageName==='done'||stageName==='earnings'){
+          clearRoute();removeCarMarker();
+          $('#mapTag').textContent='Corrida finalizada';$('#mapStatus').hidden=true;
+        }
+      }
+      function enterStage(next) {
+        state.stage=next;
+        if(next==='home'&&state.role==='driver')state.online=true;
+        render();save();routeForStage(next);
       }
       function render() {
         const driver = state.role === 'driver';
@@ -217,12 +326,15 @@
         const booking = `<section class="booking-sheet"><div class="booking-head"><button class="booking-back" type="button" data-action="close-booking" aria-label="Voltar">‹</button><div><h1 class="booking-title">Sua corrida</h1><p class="booking-subtitle">Escolha onde buscar e para onde ir.</p></div></div><div class="route-fields"><div class="route-field"><span class="route-dot"></span><div class="grow"><span class="eyebrow">ORIGEM</span><input id="pickupInput" autocomplete="street-address" value="${safe(state.pickupText || (state.pickupIsCurrent ? (state.origin?'Minha localização':'Obtendo localização…') : ''))}" placeholder="Digite o endereço de partida"></div><button class="field-icon" type="button" data-action="use-gps" aria-label="Usar minha localização">◎</button></div><div class="route-field"><span class="route-dest-icon"></span><div class="grow"><span class="eyebrow">DESTINO</span><input id="destinationInput" autocomplete="street-address" value="${safe(state.destinationText)}" placeholder="Para onde você vai?"></div><button class="field-icon" type="button" data-action="pick-destination" aria-label="Escolher destino no mapa">⌖</button></div></div><div class="booking-meta"><div class="car">▰</div><div class="grow"><div class="strong">Vello Econômico</div><div class="small">Estimativa de teste</div></div><div class="price">${price}<div class="small">simulada</div></div></div><div class="payments">${['PIX','Cartão','Dinheiro'].map(p=>`<button type="button" data-pay="${p}" class="${state.payment===p?'selected':''}" aria-pressed="${state.payment===p}">${p}</button>`).join('')}</div><p class="booking-notice" id="bookingNotice">O ponto escolhido no mapa define o destino da rota.</p><button class="primary booking-submit" data-action="request">Pedir corrida</button></section>`;
         const picker = `<section class="picker-sheet"><p class="picker-instruction">Arraste o mapa até o ponto de destino.</p><div class="picker-actions"><button type="button" class="picker-cancel" data-action="cancel-pick">Voltar</button><button type="button" class="primary" data-action="confirm-pick">Concluir local</button></div></section>`;
         const driverHome = `<h1 class="title">${state.online?'Você está online':'Pronto para dirigir?'}</h1><p class="hint">${state.online?'Solicitações de teste aparecem aqui.':'Fique online para receber uma corrida simulada.'}</p><section class="panel"><div class="row"><div class="car">▰</div><div class="grow"><div class="small">Ganhos de hoje</div><div class="strong" style="font-size:23px">R$ 0,00</div></div><div class="small">0 corridas</div></div><button class="primary" data-action="online">${state.online?'Simular solicitação':'Ficar online'}</button></section><p class="notice">Demonstração local · sem corridas reais.</p>`;
-        const flows = driver ? {request:['Nova solicitação','Alex · Praça Central\nDestino: Centro · 1,2 km · R$ 18,90','Aceitar corrida','▰','pickup'],pickup:['Vá até o passageiro','Alex aguarda no ponto de embarque.','Cheguei ao embarque','⌖','trip'],trip:['Corrida em andamento','Siga até o destino combinado.','Finalizar corrida','➤','earnings'],earnings:['Corrida concluída','R$ 18,90 adicionados aos ganhos de teste.','Voltar ao início','✓','home']} : {searching:['Procurando motorista','Encontrando um motorista perto de você…','Simular motorista encontrado','⌕','found'],found:['Motorista a caminho','Marina · Honda Fit\nChegada estimada: 4 min','Simular chegada','▰','arrived'],arrived:['Seu motorista chegou','Marina está no ponto de embarque.','Iniciar corrida de teste','⌖','trip'],trip:['Viagem em andamento',`Destino: ${safe(state.destination||'Carazinho')}\nTotal estimado: ${price}`,'Finalizar corrida','➤','payment'],payment:['Pagamento simulado',`Forma: ${state.payment}\nTotal: ${price}`,'Confirmar pagamento de teste','✓','done'],done:['Tudo certo!','Corrida de demonstração concluída.\n\n★★★★★','Pedir outra corrida','★','home']};
+        const flows = driver ? {request:['Nova solicitação','Alex · Praça Central\nDestino: Centro · 1,2 km · R$ 18,90','Aceitar corrida','▰','pickup'],pickup:['Indo buscar o passageiro','Rota simulada até o ponto de embarque.','Cheguei ao embarque','⌖','awaiting'],awaiting:['Aguardando passageiro','Você chegou ao ponto. Confirme quando o passageiro entrar no carro.','Confirmar passageiro a bordo','●','trip'],trip:['Corrida em andamento','Siga pela rota até o destino combinado.','Finalizar corrida','➤','earnings'],earnings:['Corrida concluída','R$ 18,90 adicionados aos ganhos de teste.','Voltar ao início','✓','home']} : {searching:['Procurando motorista','Encontrando um motorista perto de você…','Simular motorista encontrado','⌕','found'],found:['Motorista a caminho','Marina · Honda Fit\nChegada estimada: 4 min','Simular chegada do motorista','▰','arrived'],arrived:['Aguardando passageiro','O motorista chegou. A rota ficará oculta até ele confirmar que você entrou no carro.','Simular confirmação do motorista: entrei no carro','●','trip'],trip:['Viagem em andamento',`Destino: ${safe(state.destination||'Carazinho')}\nTotal estimado: ${price}`,'Simular motorista finalizando corrida','➤','done']};
+        const receipt = `<section class="receipt-sheet"><div class="receipt-kicker">Corrida finalizada</div><div class="receipt-amount">${price}</div><div class="receipt-payment">Pagamento de teste · ${safe(state.payment)}</div><div class="receipt-divider"></div><div class="driver-card"><img class="driver-photo" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto de Marina Costa" onerror="this.hidden=true;this.nextElementSibling.style.display='grid'"><div class="driver-fallback" aria-hidden="true">MC</div><div><div class="driver-name">Marina Costa</div><div class="driver-car">Honda Fit · motorista Vello</div></div></div><div class="receipt-divider"></div><p class="review-label">Como foi sua corrida?</p><div class="review-stars" role="radiogroup" aria-label="Avaliação do motorista">${[1,2,3,4,5].map(value=>`<button type="button" data-rating="${value}" aria-label="${value} estrela${value>1?'s':''}" aria-pressed="${state.rating===value}" class="${state.rating>=value?'active':''}">★</button>`).join('')}</div><label class="review-label" for="reviewComment">Comentário (opcional)</label><textarea class="review-comment" id="reviewComment" maxlength="300" placeholder="Conte como foi sua experiência…">${safe(state.comment)}</textarea><button class="primary review-submit" data-action="finish-review">Enviar avaliação de teste</button></section>`;
         document.body.classList.toggle('passenger-map-home',!driver&&state.stage==='home'&&!state.bookingOpen&&!state.mapPicking);
         document.body.classList.toggle('passenger-booking',!driver&&state.stage==='home'&&state.bookingOpen&&!state.mapPicking);
         document.body.classList.toggle('passenger-picker',!driver&&state.stage==='home'&&state.mapPicking);
+        document.body.classList.toggle('passenger-receipt',!driver&&state.stage==='done');
         if(state.stage==='home') $('#screen').innerHTML=driver?driverHome:(state.mapPicking?picker:(state.bookingOpen?booking:passengerHome));
-        else { const item=flows[state.stage]; const final=['done','earnings'].includes(state.stage); $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div><p class="stage-copy">${item[1]}</p><button class="primary" data-action="next" data-next="${item[4]}">${item[2]}</button>${final?'':'<button class="secondary" data-action="cancel">Cancelar demonstração</button>'}</section>`; }
+        else if(!driver&&state.stage==='done')$('#screen').innerHTML=receipt;
+        else { const item=flows[state.stage]; const final=['earnings'].includes(state.stage); $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div><p class="stage-copy">${item[1]}</p><button class="primary" data-action="next" data-next="${item[4]}">${item[2]}</button>${final?'':'<button class="secondary" data-action="cancel">Cancelar demonstração</button>'}</section>`; }
       }
       async function requestRide(button) {
         const pickupField=$('#pickupInput'),destinationField=$('#destinationInput');
@@ -236,13 +348,12 @@
           else {if(!state.pickupText)throw new Error('Digite o endereço de partida.');const place=await forwardGeocode(state.pickupText,state.origin||home);origin=place.coordinates;state.pickupCoordinates=origin;}
           if(!state.destinationCoordinates){const place=await forwardGeocode(state.destinationText,origin);state.destinationCoordinates=place.coordinates;}
           state.destination=state.destinationText;
-          const ok=await calculateRoute(origin,state.destinationCoordinates);
-          if(ok){state.bookingOpen=false;state.stage='searching';render();save();}
-          else {button.disabled=false;button.textContent='Pedir corrida';$('#bookingNotice').textContent='Não consegui calcular a rota. Confira os endereços e tente novamente.';}
+          state.bookingOpen=false;clearRoute();removeCarMarker();state.stage='searching';render();save();$('#mapTag').textContent='Procurando motorista';
         } catch(error) {button.disabled=false;button.textContent='Pedir corrida';$('#bookingNotice').textContent=error.message||'Confira os endereços e tente novamente.';}
       }
       function save() { try { localStorage.setItem('vello-demo', JSON.stringify({role:state.role,payment:state.payment,destination:state.destinationFromMap?'':state.destination,destinationText:state.destinationFromMap?'':state.destinationText,pickupText:state.pickupIsCurrent?'':state.pickupText,pickupIsCurrent:state.pickupIsCurrent})); } catch (_) {} }
       function update(event) {
+        const rating=event.target.closest('[data-rating]');if(rating){state.rating=Number(rating.dataset.rating);render();return;}
         const pay=event.target.closest('[data-pay]'); if(pay){state.payment=pay.dataset.pay;render();save();return;}
         const button=event.target.closest('[data-action]'); if(!button)return;
         if(button.dataset.action==='open-booking'){state.bookingOpen=true;render();return;}
@@ -257,13 +368,16 @@
         }
         if(button.dataset.action==='online'){if(!state.online)state.online=true;else state.stage='request';}
         if(button.dataset.action==='request'){requestRide(button);return;}
-        if(button.dataset.action==='next'){state.stage=button.dataset.next;if(state.stage==='home'&&state.role==='driver')state.online=true;}
-        if(button.dataset.action==='cancel')state.stage='home';render();save();
+        if(button.dataset.action==='next'){enterStage(button.dataset.next);return;}
+        if(button.dataset.action==='finish-review'){state.stage='home';state.bookingOpen=false;state.mapPicking=false;state.destination='';state.destinationText='';state.destinationCoordinates=null;state.destinationFromMap=false;state.pickupText='';state.pickupIsCurrent=true;state.pickupCoordinates=state.origin;state.rating=0;state.comment='';clearRoute();render();save();return;}
+        if(button.dataset.action==='cancel'){state.stage='home';clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
+        render();save();
       }
       $('#screen').addEventListener('click', update);
       $('#screen').addEventListener('input', (event)=>{
         if(event.target.id==='pickupInput'){state.pickupText=event.target.value;state.pickupIsCurrent=false;state.pickupCoordinates=null;}
         if(event.target.id==='destinationInput'){state.destinationText=event.target.value;state.destination=event.target.value;state.destinationCoordinates=null;state.destinationFromMap=false;}
+        if(event.target.id==='reviewComment')state.comment=event.target.value;
         if(event.target.id==='pickupInput'||event.target.id==='destinationInput')save();
       });
       $('#gpsButton').addEventListener('click',()=>locateUser().catch(error=>{$('#locationLabel').textContent=error.message;}));
@@ -271,7 +385,7 @@
       $('#mapStatus').addEventListener('click',event=>{if(event.target.id==='setupMap')openMapSetup();});
       $('#cancelMapSetup').addEventListener('click',()=>$('#mapDialog').close());
       $('#mapTokenForm').addEventListener('submit',event=>{event.preventDefault();const token=$('#mapTokenInput').value.trim();if(!token.startsWith('pk.')){mapStatus('Use um token público Mapbox, que começa com pk.',true);return;}$('#mapDialog').close();setMapToken(token);});
-        $('#roleToggle').addEventListener('click',()=>{state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.online=false;state.bookingOpen=false;state.mapPicking=false;render();save();});
+        $('#roleToggle').addEventListener('click',()=>{clearRoute();removeCarMarker();state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.online=false;state.bookingOpen=false;state.mapPicking=false;render();save();});
       try{const saved=JSON.parse(localStorage.getItem('vello-demo')||'{}');state.role=saved.role==='driver'?'driver':'passenger';state.payment=saved.payment||state.payment;state.destination=saved.destination||'';state.destinationText=saved.destinationText||saved.destination||'';state.pickupText=saved.pickupText||'';state.pickupIsCurrent=saved.pickupIsCurrent!==false;}catch(_){}
       try{state.mapToken=SHARED_MAPBOX_TOKEN||localStorage.getItem('vello-map-token')||'';}catch(_){}
       if(SHARED_MAPBOX_TOKEN)$('#mapSettings').hidden=true;
