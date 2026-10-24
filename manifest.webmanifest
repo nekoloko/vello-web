@@ -1,0 +1,12 @@
+{
+  "name": "Vello — Carazinho",
+  "short_name": "Vello",
+  "description": "Demonstração do Vello Econômico",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0910",
+  "theme_color": "#0b0910",
+  "icons": [{ "src": "vello-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

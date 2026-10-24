@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0910">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vello">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="vello-icon.svg">
+  <title>Vello • Carazinho</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b0910;--panel:#17141e;--panel2:#211c2b;--purple:#a77aff;--lilac:#d1baff;--text:#f7f4fc;--muted:#aaa3b5;--green:#72dfad;--line:#302a39;font:16px/1.42 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}button,input{font:inherit}button{min-height:46px;border:0;border-radius:14px;padding:0 15px;color:var(--text);background:var(--panel2);font-weight:650;touch-action:manipulation}button:active{transform:scale(.985)}.app{width:min(100%,520px);min-height:100svh;margin:auto;padding:0 14px 20px}.top{display:flex;align-items:center;gap:11px;padding:16px 4px 14px}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--purple);color:#171020;font-weight:900;font-size:24px}.brand{font-size:23px;font-weight:850;letter-spacing:-1px}.role{font-size:10px;letter-spacing:1.1px;color:var(--lilac);font-weight:700}.spacer{flex:1}.badge{border-radius:99px;padding:8px 11px;background:#173428;color:var(--green);font-size:11px;font-weight:750}.map{height:248px;position:relative;overflow:hidden;border-radius:23px;background-color:#191720;background-image:repeating-linear-gradient(24deg,transparent 0 34px,#292633 35px 37px,transparent 38px 78px),repeating-linear-gradient(112deg,transparent 0 49px,#25232f 50px 52px,transparent 53px 91px)}.route{position:absolute;height:6px;left:15%;top:59%;width:76%;border-radius:8px;background:var(--purple);transform:rotate(-22deg);box-shadow:0 0 20px #a77aff66}.pin{position:absolute;width:24px;height:24px;border:4px solid #dac8ff;border-radius:50%;background:var(--purple);box-shadow:0 0 0 7px #a77aff2b}.start{left:16%;top:69%}.end{right:12%;top:26%;border-color:#a5f0ca;background:var(--green);box-shadow:0 0 0 7px #72dfad2d}.map-label{position:absolute;left:15px;top:13px}.eyebrow{display:block;color:var(--muted);font-size:10px;letter-spacing:1px;font-weight:750;margin-bottom:3px}.map-tag{position:absolute;left:12px;bottom:12px;border-radius:99px;padding:7px 10px;background:#211d2bea;font-size:11px}.gps{position:absolute;right:11px;bottom:10px;width:45px;padding:0;border-radius:50%;font-size:21px;color:var(--lilac)}main{padding:17px 2px}.title{margin:0 0 3px;font-size:24px;letter-spacing:-.5px}.hint{margin:0 0 13px;color:var(--muted);font-size:13px}.panel{background:var(--panel);border-radius:19px;padding:15px;margin:10px 0}.place{display:flex;align-items:center;gap:11px;min-height:42px}.symbol{width:21px;color:var(--lilac);text-align:center;font-size:18px}.place-data{flex:1;min-width:0}.place input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:16px;padding:2px 0}.separator{width:1px;height:14px;margin-left:9px;background:#443c4f}.row{display:flex;align-items:center;gap:11px}.grow{flex:1}.car{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#30253e;font-size:20px}.strong{font-weight:750}.small{font-size:12px;color:var(--muted)}.price{font-size:19px;font-weight:800;text-align:right}.payments{display:flex;gap:7px;margin:9px 0 12px}.payments button{min-height:39px;padding:0 13px;border:1px solid transparent;border-radius:99px;background:var(--panel2);color:var(--muted);font-size:12px}.payments button.selected{border-color:var(--purple);background:#a77aff24;color:var(--lilac)}.primary{width:100%;min-height:52px;background:var(--purple);color:#171020;font-weight:800}.secondary{width:100%;margin-top:9px}.stage-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#30253e;font-size:22px}.stage-copy{margin:14px 0 17px;color:var(--muted);font-size:14px;white-space:pre-line}.notice{min-height:18px;margin:7px 3px;color:var(--lilac);font-size:12px}.tabbar{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:11px 0 5px;color:var(--muted);font-size:11px;text-align:center}.tabbar span:first-child{color:var(--lilac)}@media(min-width:600px){body{background:#120f18}.app{padding:0 18px 25px}.map{height:270px}}
+    .role-toggle{min-height:38px;padding:0 10px;border-radius:99px;background:var(--panel2);color:var(--lilac);font-size:11px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top"><div class="mark" aria-hidden="true">ϟ</div><div><div class="brand">vello</div><div class="role" id="roleLabel">PASSAGEIRO · TESTE</div></div><div class="spacer"></div><button class="role-toggle" id="roleToggle" type="button">Trocar perfil</button><div class="badge" id="onlineBadge" hidden>● ONLINE</div></header>
+    <section class="map" role="img" aria-label="Mapa esquemático de Carazinho com uma rota de demonstração"><div class="route"></div><div class="pin start"></div><div class="pin end"></div><div class="map-label"><span class="eyebrow">BUSCANDO EM</span><strong id="locationLabel">Carazinho, RS</strong></div><div class="map-tag">● &nbsp; Vello Econômico</div><button class="gps" id="gpsButton" aria-label="Usar minha localização">◎</button></section>
+    <main id="screen" aria-live="polite"></main>
+    <nav class="tabbar" aria-label="Navegação"><span>⌂<br>Início</span><span>◷<br>Viagens</span><span>◉<br>Perfil</span></nav>
+  </div>
+  <script>
+    (() => {
+      const $ = (selector) => document.querySelector(selector);
+      const state = { role: 'passenger', stage: 'home', payment: 'PIX', destination: '', online: false };
+      const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+      const price = money.format(18.90);
+      const safe = (value) => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      function render() {
+        const driver = state.role === 'driver';
+        $('#roleLabel').textContent = driver ? 'MOTORISTA · TESTE' : 'PASSAGEIRO · TESTE';
+        $('#onlineBadge').hidden = !driver || !state.online;
+        const passengerHome = `<h1 class="title">Pra onde vamos?</h1><p class="hint">Sua próxima viagem começa aqui.</p><section class="panel"><div class="place"><span class="symbol">◎</span><div class="place-data"><span class="eyebrow">ORIGEM</span>Minha localização</div></div><div class="separator"></div><div class="place"><span class="symbol">⌖</span><div class="place-data"><label class="eyebrow" for="destination">DESTINO</label><input id="destination" autocomplete="street-address" placeholder="Digite um endereço" value="${safe(state.destination)}"></div></div></section><section class="panel"><div class="row"><div class="car">▰</div><div class="grow"><div class="strong">Vello Econômico</div><div class="small">Até 4 passageiros · ~4 min</div></div><div class="price">${price}<div class="small">estimativa</div></div></div><span class="eyebrow" style="margin-top:15px">PAGAMENTO</span><div class="payments">${['PIX','Cartão','Dinheiro'].map(p=>`<button type="button" data-pay="${p}" class="${state.payment===p?'selected':''}" aria-pressed="${state.payment===p}">${p}</button>`).join('')}</div><button class="primary" data-action="request">Solicitar Vello</button></section><p class="notice">Tarifa e corrida simuladas · mapa esquemático.</p>`;
+        const driverHome = `<h1 class="title">${state.online?'Você está online':'Pronto para dirigir?'}</h1><p class="hint">${state.online?'Solicitações de teste aparecem aqui.':'Fique online para receber uma corrida simulada.'}</p><section class="panel"><div class="row"><div class="car">▰</div><div class="grow"><div class="small">Ganhos de hoje</div><div class="strong" style="font-size:23px">R$ 0,00</div></div><div class="small">0 corridas</div></div><button class="primary" data-action="online">${state.online?'Simular solicitação':'Ficar online'}</button></section><p class="notice">Demonstração local · sem corridas reais.</p>`;
+        const flows = driver ? {request:['Nova solicitação','Alex · Praça Central\nDestino: Centro · 1,2 km · R$ 18,90','Aceitar corrida','▰','pickup'],pickup:['Vá até o passageiro','Alex aguarda no ponto de embarque.','Cheguei ao embarque','⌖','trip'],trip:['Corrida em andamento','Siga até o destino combinado.','Finalizar corrida','➤','earnings'],earnings:['Corrida concluída','R$ 18,90 adicionados aos ganhos de teste.','Voltar ao início','✓','home']} : {searching:['Procurando motorista','Encontrando um motorista perto de você…','Simular motorista encontrado','⌕','found'],found:['Motorista a caminho','Marina · Honda Fit\nChegada estimada: 4 min','Simular chegada','▰','arrived'],arrived:['Seu motorista chegou','Marina está no ponto de embarque.','Iniciar corrida de teste','⌖','trip'],trip:['Viagem em andamento',`Destino: ${safe(state.destination||'Carazinho')}\nTotal estimado: ${price}`,'Finalizar corrida','➤','payment'],payment:['Pagamento simulado',`Forma: ${state.payment}\nTotal: ${price}`,'Confirmar pagamento de teste','✓','done'],done:['Tudo certo!','Corrida de demonstração concluída.\n\n★★★★★','Pedir outra corrida','★','home']};
+        if(state.stage==='home') $('#screen').innerHTML=driver?driverHome:passengerHome;
+        else { const item=flows[state.stage]; const final=['done','earnings'].includes(state.stage); $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div><p class="stage-copy">${item[1]}</p><button class="primary" data-action="next" data-next="${item[4]}">${item[2]}</button>${final?'':'<button class="secondary" data-action="cancel">Cancelar demonstração</button>'}</section>`; }
+      }
+      function save() { try { localStorage.setItem('vello-demo', JSON.stringify({role:state.role,payment:state.payment,destination:state.destination})); } catch (_) {} }
+      function update(event) {
+        const pay=event.target.closest('[data-pay]'); if(pay){state.payment=pay.dataset.pay;render();save();return;}
+        const button=event.target.closest('[data-action]'); if(!button)return;
+        if(button.dataset.action==='online'){if(!state.online)state.online=true;else state.stage='request';}
+        if(button.dataset.action==='request'){state.destination=$('#destination')?.value.trim()||'';if(!state.destination){$('#destination')?.focus();$('#destination')?.setAttribute('placeholder','Digite seu destino para continuar');return;}state.stage='searching';}
+        if(button.dataset.action==='next'){state.stage=button.dataset.next;if(state.stage==='home'&&state.role==='driver')state.online=true;}
+        if(button.dataset.action==='cancel')state.stage='home';render();save();
+      }
+      $('#screen').addEventListener('click', update);
+      $('#screen').addEventListener('input', (event)=>{if(event.target.id==='destination'){state.destination=event.target.value;save();}});
+      $('#gpsButton').addEventListener('click',()=>{
+        const label=$('#locationLabel');
+        if(!('geolocation' in navigator)){label.textContent='GPS indisponível neste navegador';return;}
+        label.textContent='Buscando posição…';
+        navigator.geolocation.getCurrentPosition(
+          (position)=>{label.textContent=`${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;},
+          (error)=>{label.textContent=error.code===1?'Permita localização no Safari':'Não foi possível obter o GPS';},
+          {enableHighAccuracy:true,timeout:12000,maximumAge:30000}
+        );
+      });
+      $('#roleToggle').addEventListener('click',()=>{state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.online=false;render();save();});
+      try{const saved=JSON.parse(localStorage.getItem('vello-demo')||'{}');state.role=saved.role==='driver'?'driver':'passenger';state.payment=saved.payment||state.payment;state.destination=saved.destination||'';}catch(_){}
+      if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      render();
+    })();
+  </script>
+</body>
+</html>
