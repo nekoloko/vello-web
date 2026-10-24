@@ -16,6 +16,8 @@ Sirva os arquivos desta pasta em um domínio HTTPS. No iPhone, abra a página no
 - O navegador envia ao Mapbox a localização/destino necessários quando a pessoa pede a rota; a coordenada do mapa é consultada para obter o endereço depois de tocar em **Concluir local**. A rota aparece em roxo com marcadores próprios do Vello.
 - Quando encontra o motorista, o mapa mostra o trajeto dele até o ponto de embarque e um carro roxo ilustrado se desloca e vira conforme o caminho. Ao chegar, a rota some e o status fica **Aguardando passageiro**. Depois da confirmação simulada de embarque, o trajeto até o destino aparece.
 - Ao finalizar a viagem, a tela de recibo destaca o valor, mostra o perfil de demonstração do motorista e permite escolher estrelas e escrever um comentário opcional.
+- Enquanto o motorista está a caminho, aguardando no embarque ou durante a viagem, o passageiro pode abrir o contato de demonstração com o motorista e compartilhar um resumo da corrida pelo menu de compartilhamento do celular (ou copiando o texto). A ligação e as mensagens são apenas simuladas; não chegam a uma pessoa real.
+- O passageiro pode cancelar enquanto a solicitação está sendo atendida ou antes do embarque, com confirmação e registro local no histórico. Depois do início da viagem, o cancelamento deixa de aparecer.
 - Os botões discretos no cabeçalho abrem o histórico local de corridas e a área Ajuda e avisos. O histórico mantém corridas concluídas e canceladas; a avaliação e o comentário do passageiro ficam associados à corrida no próprio navegador.
 - Na etapa de pagamento, o passageiro pode adicionar gorjeta manualmente ou pelos atalhos de +R$ 2, +R$ 10, +R$ 50 e +R$ 100. A demonstração mostra QR com gorjeta ou sem gorjeta; o QR contém apenas texto de teste, não é um PIX pagável. A comissão de 15% é calculada somente sobre a tarifa da corrida; a gorjeta vai integralmente ao motorista e não é usada para compensar saldo pendente.
 - Ajuda inclui categorias como acidente, risco de segurança, passageiro que não pagou, falha de pagamento, ausência e objeto esquecido. O relato fica somente neste aparelho e não notifica uma equipe. Em emergência, há atalhos de ligação para 192 (SAMU), 193 (Bombeiros) e 190 (Polícia).
@@ -27,6 +29,7 @@ Sirva os arquivos desta pasta em um domínio HTTPS. No iPhone, abra a página no
 - Perfil Passageiro e Motorista de demonstração.
 - Solicitação, aproximação do motorista, espera de embarque, corrida, pagamento e ganhos simulados.
 - Recibo final de demonstração com avaliação opcional do motorista.
+- Ações de contato simuladas, compartilhamento do resumo da viagem e cancelamento com confirmação antes do embarque.
 - GPS do Safari, origem editável e destino selecionável no mapa.
 - Preferências simples guardadas no próprio iPhone.
 - Histórico de corridas e avisos locais, salvos apenas no navegador deste aparelho.
