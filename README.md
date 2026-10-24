@@ -13,6 +13,8 @@ Sirva os arquivos desta pasta em um domínio HTTPS. No iPhone, abra a página no
 - Sem token compartilhado no código, a engrenagem permite configurar um token local no navegador. Nunca use um token secreto (`sk...`).
 - Ao tocar em **Calcular rota e solicitar**, o navegador envia ao Mapbox as coordenadas GPS e o endereço digitado para buscar o destino e montar o trajeto.
 - A origem é atualizada pelo GPS do aparelho. O endereço digitado é geocodificado para uma coordenada.
+- No perfil Passageiro, o mapa claro ocupa o fundo da tela e aceita arrastar com um dedo. Após autorizar a localização, um ponto azul discreto indica a posição; o trajeto usa uma linha roxa e um marcador Vello para o destino.
+- Ao abrir o perfil Passageiro, o Safari solicita a localização para posicionar o ponto azul. Também é possível centralizar novamente pelo botão de localização.
 - A estimativa de preço, corrida, motorista e pagamento continuam simulados; esta demo não tem navegação por voz, trânsito em tempo real nem backend.
 
 ## O que demonstra
