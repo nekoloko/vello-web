@@ -15,6 +15,24 @@
   <style>
     :root{color-scheme:dark;--bg:#0b0910;--panel:#17141e;--panel2:#211c2b;--purple:#a77aff;--lilac:#d1baff;--text:#f7f4fc;--muted:#aaa3b5;--green:#72dfad;--line:#302a39;font:16px/1.42 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}button,input{font:inherit}button{min-height:46px;border:0;border-radius:14px;padding:0 15px;color:var(--text);background:var(--panel2);font-weight:650;touch-action:manipulation}button:active{transform:scale(.985)}.app{width:min(100%,520px);min-height:100svh;margin:auto;padding:0 14px 20px}.top{display:flex;align-items:center;gap:11px;padding:16px 4px 14px}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--purple);color:#171020;font-weight:900;font-size:24px}.brand{font-size:23px;font-weight:850;letter-spacing:-1px}.role{font-size:10px;letter-spacing:1.1px;color:var(--lilac);font-weight:700}.spacer{flex:1}.badge{border-radius:99px;padding:8px 11px;background:#173428;color:var(--green);font-size:11px;font-weight:750}.map{height:248px;position:relative;overflow:hidden;border-radius:23px;background:#191720}.map-canvas{position:absolute;inset:0}.map-overlay{position:absolute;left:12px;bottom:12px;z-index:2;border-radius:99px;padding:7px 10px;background:#211d2bea;font-size:11px;max-width:calc(100% - 120px)}.map-status{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;text-align:center;padding:14px 16px;border-radius:15px;background:#17141ee8;color:var(--text);font-size:12px;max-width:82%;box-shadow:0 8px 26px #0005}.map-status button{display:block;margin:10px auto 0;min-height:38px;background:var(--purple);color:#171020;font-size:12px}.map-settings,.gps{position:absolute;right:11px;z-index:3;width:42px;height:42px;padding:0;border-radius:50%;font-size:19px;color:var(--lilac);background:#211d2bea}.map-settings{top:11px}.gps{bottom:11px}.map-label{position:absolute;left:15px;top:13px;z-index:2;pointer-events:none;text-shadow:0 1px 4px #000}.eyebrow{display:block;color:var(--muted);font-size:10px;letter-spacing:1px;font-weight:750;margin-bottom:3px}.map .mapboxgl-ctrl-top-right{top:60px}.map .mapboxgl-ctrl-bottom-right{bottom:4px;right:6px}.map .mapboxgl-ctrl-attrib{font-size:9px}main{padding:17px 2px}.title{margin:0 0 3px;font-size:24px;letter-spacing:-.5px}.hint{margin:0 0 13px;color:var(--muted);font-size:13px}.panel{background:var(--panel);border-radius:19px;padding:15px;margin:10px 0}.place{display:flex;align-items:center;gap:11px;min-height:42px}.symbol{width:21px;color:var(--lilac);text-align:center;font-size:18px}.place-data{flex:1;min-width:0}.place input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:16px;padding:2px 0}.separator{width:1px;height:14px;margin-left:9px;background:#443c4f}.row{display:flex;align-items:center;gap:11px}.grow{flex:1}.car{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#30253e;font-size:20px}.strong{font-weight:750}.small{font-size:12px;color:var(--muted)}.price{font-size:19px;font-weight:800;text-align:right}.payments{display:flex;gap:7px;margin:9px 0 12px}.payments button{min-height:39px;padding:0 13px;border:1px solid transparent;border-radius:99px;background:var(--panel2);color:var(--muted);font-size:12px}.payments button.selected{border-color:var(--purple);background:#a77aff24;color:var(--lilac)}.primary{width:100%;min-height:52px;background:var(--purple);color:#171020;font-weight:800}.secondary{width:100%;margin-top:9px}.stage-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#30253e;font-size:22px}.stage-copy{margin:14px 0 17px;color:var(--muted);font-size:14px;white-space:pre-line}.notice{min-height:18px;margin:7px 3px;color:var(--lilac);font-size:12px}.tabbar{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:11px 0 5px;color:var(--muted);font-size:11px;text-align:center}.tabbar span:first-child{color:var(--lilac)}dialog{width:min(92vw,430px);border:1px solid var(--line);border-radius:20px;padding:20px;background:var(--panel);color:var(--text)}dialog::backdrop{background:#0009}dialog h2{margin:0 0 7px;font-size:20px}dialog p{color:var(--muted);font-size:13px}dialog input{width:100%;border:1px solid var(--line);border-radius:11px;background:#0e0b13;color:var(--text);padding:12px}dialog .dialog-actions{display:flex;gap:9px;margin-top:14px}dialog .dialog-actions button{flex:1}@media(min-width:600px){body{background:#120f18}.app{padding:0 18px 25px}.map{height:270px}}
     .role-toggle{min-height:38px;padding:0 10px;border-radius:99px;background:var(--panel2);color:var(--lilac);font-size:11px}
+    .top-tool{width:36px;min-width:36px;min-height:36px;padding:0;border-radius:50%;background:var(--panel2);color:var(--lilac);font-size:17px;display:grid;place-items:center}
+    .history-dialog,.help-dialog{max-height:min(82svh,680px);overflow:auto}
+    .dialog-heading{display:flex;align-items:center;gap:10px}.dialog-heading h2{flex:1}.dialog-close{width:36px;min-height:36px;padding:0;border-radius:50%;font-size:20px}
+    .dialog-intro{margin:3px 0 14px}
+    .history-list,.help-options,.report-list{display:grid;gap:9px}
+    .history-entry,.report-entry{padding:12px;border:1px solid var(--line);border-radius:14px;background:#100d16}
+    .history-entry-top,.history-route{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .history-entry-top{font-size:12px}.history-route{margin-top:9px;font-size:12px}.history-route span{min-width:0;overflow-wrap:anywhere}.history-route b{color:var(--lilac);font-weight:500}
+    .history-meta{display:flex;justify-content:space-between;gap:8px;margin-top:8px;color:var(--muted);font-size:11px}
+    .history-empty{padding:22px 12px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:13px;text-align:center}
+    .help-options button{text-align:left;display:flex;align-items:center;gap:11px;padding:0 12px;background:var(--panel2);font-size:13px}
+    .help-symbol{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#a77aff24;color:var(--lilac);font-size:16px}
+    .emergency-box{margin:13px 0;padding:12px;border:1px solid #633b48;border-radius:14px;background:#28141b}
+    .emergency-box strong{font-size:12px}.emergency-box p{margin:4px 0 9px;font-size:11px}
+    .emergency-links{display:flex;gap:7px}.emergency-links a{flex:1;display:block;padding:10px 6px;border-radius:10px;background:#3d2029;color:#ffdce3;text-decoration:none;text-align:center;font-size:11px;font-weight:750}
+    .help-detail[hidden]{display:none}.help-detail label{display:block;margin:10px 0 6px;font-size:12px;font-weight:700}.help-detail textarea{width:100%;min-height:82px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:10px;background:#0e0b13;color:var(--text);font:inherit;font-size:13px}
+    .local-only{margin:11px 0 0;padding:10px;border-radius:12px;background:#211c2b;color:var(--muted);font-size:11px}
+    .report-entry strong{font-size:12px}.report-entry p{margin:5px 0 0;font-size:11px;overflow-wrap:anywhere}
     /* Passageiro: mapa claro e painel compacto, inspirado na simplicidade da referência. */
     @media(max-width:599px){
       body{background:#f5f5f7;color:#17151d;overflow:hidden;padding:0}
@@ -24,6 +42,7 @@
       .brand{color:#19151f}
       .role{color:#72539b}
       .role-toggle{background:#f1edf6;color:#5a3c7e}
+      .top-tool{width:34px;min-width:34px;min-height:34px;background:#f4f1f7;color:#563574}
       .map{position:absolute;inset:0;height:100%;border-radius:0;background:#e9e9e7}
       .map-canvas{inset:0}
       .map-label{top:calc(env(safe-area-inset-top) + 76px);left:20px;padding:8px 12px;border:1px solid #e8e5ec;border-radius:12px;background:#ffffffed;color:#27232d;text-shadow:none;box-shadow:0 4px 16px #1c193012}
@@ -63,6 +82,19 @@
       .role{display:none}.mark{width:34px;height:34px;border-radius:11px;font-size:20px}
       .brand{font-size:21px}.role-toggle{width:34px;min-height:34px;padding:0;border-radius:50%;font-size:0;background:#f4f1f7;color:#563574}
       .role-toggle::after{content:'⋯';font-size:20px;line-height:1}
+      .history-dialog,.help-dialog{max-height:calc(100svh - env(safe-area-inset-top) - 24px);margin:auto;padding:18px;border-radius:21px;background:#fff;color:#211d26}
+      .history-dialog::backdrop,.help-dialog::backdrop{background:#17102088}
+      .history-dialog .history-entry,.history-dialog .report-entry{border-color:#ebe7ef;background:#faf9fb}
+      .history-dialog .history-route b{color:#59377b}
+      .history-dialog .history-meta{color:#77717e}
+      .history-dialog .history-empty{border-color:#e4dfea;color:#77717e}
+      .help-dialog .help-options button{background:#f5f2f7;color:#30283a}
+      .help-dialog .help-symbol{background:#f0e8f7;color:#59377b}
+      .help-dialog .emergency-box{border-color:#f0d5db;background:#fff4f5;color:#42232a}
+      .help-dialog .emergency-box p{color:#735c61}
+      .help-dialog .emergency-links a{background:#f5e7ea;color:#632f3a}
+      .help-dialog .help-detail textarea{border-color:#e6e1ea;background:#fff;color:#211d26}
+      .help-dialog .local-only{background:#f3eff6;color:#62596b}
       .passenger-map-home .top{top:calc(env(safe-area-inset-top) + 5px)}
       .passenger-map-home #screen{bottom:calc(env(safe-area-inset-bottom) + 16px);max-height:none}
       .passenger-map-home .map .mapboxgl-ctrl-bottom-right,.passenger-picker .map .mapboxgl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 84px);right:6px}
@@ -154,11 +186,13 @@
 </head>
 <body>
   <div class="app">
-    <header class="top"><div class="mark" aria-hidden="true">ϟ</div><div><div class="brand">vello</div><div class="role" id="roleLabel">PASSAGEIRO · TESTE</div></div><div class="spacer"></div><button class="role-toggle" id="roleToggle" type="button" aria-label="Trocar perfil" title="Trocar perfil">Trocar perfil</button><div class="badge" id="onlineBadge" hidden>● ONLINE</div></header>
+    <header class="top"><div class="mark" aria-hidden="true">ϟ</div><div><div class="brand">vello</div><div class="role" id="roleLabel">PASSAGEIRO · TESTE</div></div><div class="spacer"></div><button class="top-tool" type="button" data-action="open-history" aria-label="Histórico de corridas" title="Histórico">◷</button><button class="top-tool" type="button" data-action="open-help" aria-label="Ajuda e avisos" title="Ajuda">?</button><button class="role-toggle" id="roleToggle" type="button" aria-label="Trocar perfil" title="Trocar perfil">Trocar perfil</button><div class="badge" id="onlineBadge" hidden>● ONLINE</div></header>
     <section class="map" aria-label="Mapa e rota do Vello"><div id="mapCanvas" class="map-canvas"></div><div class="map-label"><span class="eyebrow">NO MAPA</span><strong id="locationLabel">Carazinho, RS</strong></div><div id="mapStatus" class="map-status">Configure o mapa para ver ruas e calcular rotas.<button id="setupMap" type="button">Configurar mapa</button></div><div class="map-overlay" id="mapTag">Vello Econômico · mapa real</div><button class="map-settings" id="mapSettings" aria-label="Configurar mapa">⚙</button><button class="gps" id="gpsButton" aria-label="Usar minha localização">◎</button><div class="map-picker-pin" aria-hidden="true">⌖</div></section>
     <main id="screen" aria-live="polite"></main>
     <nav class="tabbar" aria-label="Navegação"><span>⌂<br>Início</span><span>◷<br>Viagens</span><span>◉<br>Perfil</span></nav>
   </div>
+  <dialog id="historyDialog" class="history-dialog" aria-labelledby="historyTitle"></dialog>
+  <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle"></dialog>
   <dialog id="mapDialog"><form id="mapTokenForm"><h2>Ativar mapa do Vello</h2><p>Cole um token <strong>público</strong> do Mapbox (começa com <code>pk.</code>). Ele ficará salvo apenas neste navegador. Ao pedir uma rota, a origem e o destino serão enviados ao Mapbox.</p><input id="mapTokenInput" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="pk.eyJ..." aria-label="Token público do Mapbox"><div class="dialog-actions"><button type="button" id="cancelMapSetup">Cancelar</button><button type="submit" class="primary">Salvar token</button></div></form></dialog>
   <script>
     // Public default token for this demo. Its Mapbox account has usage limits and no billing method.
@@ -166,7 +200,7 @@
     (() => {
       const $ = (selector) => document.querySelector(selector);
       const dayKey = () => { const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
-      const state = { role: 'passenger', stage: 'home', payment: 'PIX', paymentConfirmed: false, destination: '', destinationText: '', destinationCoordinates: null, destinationFromMap: false, pickupText: '', pickupCoordinates: null, pickupIsCurrent: true, fare: 7, estimatedMinutes: 1, estimateReady: false, estimateKey: '', routeChoices: [], selectedRouteIndex: 0, selectedRoute: null, trafficAware: true, trafficSuggestion: null, trafficSuggestionMinutes: 0, trafficSuggestionOrigin: null, dismissedTrafficSignature: '', driverCurrentPosition: null, driverWatchId: null, trafficPollTimer: null, lastTrafficQueryAt: 0, lastTrafficQueryLocation: null, trafficChecking: false, bookingOpen: false, mapPicking: false, mapPickTarget: 'destination', online: false, origin: null, map: null, mapToken: '', route: null, markers: [], locationMarker: null, carMarker: null, carElement: null, carFrame: null, rating: 0, comment: '', finance: { day: dayKey(), todayGross: 0, todayNet: 0, available: 0, cashDebt: 0, trips: 0, paidOut: 0 }, lastSettlement: null, rideSettled: false };
+      const state = { role: 'passenger', stage: 'home', payment: 'PIX', paymentConfirmed: false, destination: '', destinationText: '', destinationCoordinates: null, destinationFromMap: false, pickupText: '', pickupCoordinates: null, pickupIsCurrent: true, fare: 7, estimatedMinutes: 1, estimateReady: false, estimateKey: '', routeChoices: [], selectedRouteIndex: 0, selectedRoute: null, trafficAware: true, trafficSuggestion: null, trafficSuggestionMinutes: 0, trafficSuggestionOrigin: null, dismissedTrafficSignature: '', driverCurrentPosition: null, driverWatchId: null, trafficPollTimer: null, lastTrafficQueryAt: 0, lastTrafficQueryLocation: null, trafficChecking: false, bookingOpen: false, mapPicking: false, mapPickTarget: 'destination', online: false, origin: null, map: null, mapToken: '', route: null, markers: [], locationMarker: null, carMarker: null, carElement: null, carFrame: null, rating: 0, comment: '', rideHistory: [], incidentReports: [], activeRideHistoryId: null, helpCategory: '', finance: { day: dayKey(), todayGross: 0, todayNet: 0, available: 0, cashDebt: 0, trips: 0, paidOut: 0 }, lastSettlement: null, rideSettled: false };
       const home = [-52.7864, -28.2836];
       const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
       const fareText = () => money.format(state.fare);
@@ -187,7 +221,7 @@
           settlement.offset=cents(Math.min(driverShare,state.finance.cashDebt));state.finance.cashDebt=cents(state.finance.cashDebt-settlement.offset);
           settlement.payout=cents(driverShare-settlement.offset);state.finance.available=cents(state.finance.available+settlement.payout);
         }
-        state.lastSettlement=settlement;state.rideSettled=true;saveFinance();return settlement;
+        state.lastSettlement=settlement;state.rideSettled=true;saveFinance();recordRideHistory('Concluída');return settlement;
       }
       function requestDemoPayout() {
         const amount=cents(state.finance.available);if(amount<=0)return;
@@ -203,6 +237,36 @@
         if(submit){submit.textContent='Pedir corrida';submit.disabled=false;}
       }
       const safe = (value) => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const historyDate = value => new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(new Date(value));
+      function loadLocalRecords(){try{const saved=JSON.parse(localStorage.getItem('vello-local-records')||'{}');state.rideHistory=Array.isArray(saved.rides)?saved.rides:[];state.incidentReports=Array.isArray(saved.reports)?saved.reports:[];}catch(_){}}
+      function saveLocalRecords(){try{localStorage.setItem('vello-local-records',JSON.stringify({rides:state.rideHistory.slice(0,100),reports:state.incidentReports.slice(0,50)}));}catch(_){}}
+      function recordRideHistory(status){
+        const ride={id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,role:state.role,status,at:new Date().toISOString(),fare:cents(state.fare),payment:state.payment,origin:state.role==='driver'?'Praça Central':(state.pickupIsCurrent?'Minha localização':(state.pickupText||'Ponto de embarque')),destination:state.destination||state.destinationText||(state.role==='driver'?'Centro':'Destino de teste'),rating:null,comment:''};
+        state.rideHistory.unshift(ride);state.rideHistory=state.rideHistory.slice(0,100);state.activeRideHistoryId=ride.id;saveLocalRecords();return ride;
+      }
+      function renderHistoryDialog(){
+        const rows=state.rideHistory.filter(ride=>ride.role===state.role);
+        const list=rows.length?`<div class="history-list">${rows.map(ride=>`<article class="history-entry"><div class="history-entry-top"><strong>${safe(ride.status)}</strong><strong>${money.format(ride.fare)}</strong></div><div class="history-meta"><span>${safe(historyDate(ride.at))}</span><span>${safe(ride.payment||'Pagamento não registrado')}</span></div><div class="history-route"><span>Origem: ${safe(ride.origin)}</span><b>→</b></div><div class="history-route"><span>Destino: ${safe(ride.destination)}</span></div>${ride.rating?`<div class="history-meta"><span>Avaliação: ${'★'.repeat(ride.rating)}${'☆'.repeat(5-ride.rating)}</span></div>`:''}${ride.comment?`<p class="small">${safe(ride.comment)}</p>`:''}</article>`).join('')}</div>`:'<div class="history-empty">Suas corridas concluídas e canceladas aparecerão aqui.</div>';
+        $('#historyDialog').innerHTML=`<div class="dialog-heading"><h2 id="historyTitle">Histórico de corridas</h2><button class="dialog-close" type="button" data-action="close-history" aria-label="Fechar">×</button></div><p class="dialog-intro">${state.role==='driver'?'Perfil motorista':'Perfil passageiro'} · registros deste aparelho</p>${list}<p class="local-only">O histórico fica salvo somente neste navegador. Não sincroniza com outros celulares.</p>`;
+      }
+      const helpTypes=()=>state.role==='driver'?
+        [['accident','Acidente ou alguém ferido','!'],['safety','Ameaça ou risco à segurança','⚑'],['not_paid','Passageiro não pagou','R$'],['payment_issue','Outro problema de pagamento','◈'],['no_show','Passageiro não apareceu','⌖'],['lost_item','Objeto esquecido no veículo','◇'],['other','Outro problema','…']]:
+        [['accident','Acidente ou alguém ferido','!'],['safety','Ameaça ou risco à segurança','⚑'],['payment_issue','Problema com o pagamento','◈'],['driver_no_show','Motorista não apareceu','⌖'],['lost_item','Objeto esquecido','◇'],['other','Outro problema','…']];
+      function renderHelpDialog(savedMessage=''){
+        const selected=helpTypes().find(item=>item[0]===state.helpCategory);
+        const recent=state.incidentReports.filter(report=>report.role===state.role).slice(0,3);
+        const recentMarkup=recent.length?`<div class="report-list">${recent.map(report=>`<article class="report-entry"><strong>${safe(report.label)} · ${safe(historyDate(report.at))}</strong>${report.details?`<p>${safe(report.details)}</p>`:''}</article>`).join('')}</div>`:'<div class="history-empty">Nenhum aviso salvo neste aparelho.</div>';
+        const emergency=`<section class="emergency-box"><strong>Emergência ou perigo imediato?</strong><p>Use o botão para ligar diretamente. O Vello de demonstração não envia socorro nem acompanha a ocorrência.</p><div class="emergency-links"><a href="tel:192">192 · SAMU</a><a href="tel:193">193 · Bombeiros</a><a href="tel:190">190 · Polícia</a></div></section>`;
+        const detail=selected?`<div class="help-detail"><p class="dialog-intro">${safe(selected[1])}</p>${selected[0]==='accident'||selected[0]==='safety'?emergency:''}<label for="helpDetails">Detalhes (opcional)</label><textarea id="helpDetails" maxlength="300" placeholder="Descreva brevemente o que aconteceu"></textarea><button class="primary" type="button" data-action="save-report">Salvar aviso neste aparelho</button><button class="secondary" type="button" data-action="back-help">Voltar aos assuntos</button><p class="local-only">Este aviso fica apenas neste aparelho. Não é enviado a uma equipe de suporte ou às autoridades.</p></div>`:'';
+        const options=selected?'':`<div class="help-options">${helpTypes().map(([type,label,icon])=>`<button type="button" data-help-type="${type}"><span class="help-symbol" aria-hidden="true">${icon}</span>${safe(label)}</button>`).join('')}</div>`;
+        $('#helpDialog').innerHTML=`<div class="dialog-heading"><h2 id="helpTitle">Ajuda e avisos</h2><button class="dialog-close" type="button" data-action="close-help" aria-label="Fechar">×</button></div><p class="dialog-intro">Escolha o assunto para abrir orientações ou registrar um aviso.</p>${savedMessage?`<p class="local-only" role="status">${safe(savedMessage)}</p>`:''}${options}${detail}${selected?'':emergency}${selected?'':`<h3 style="font-size:13px;margin:17px 0 9px">Avisos salvos neste aparelho</h3>${recentMarkup}`}<p class="local-only">Demonstração: não há central Vello conectada. Em emergência, ligue diretamente para o serviço apropriado.</p>`;
+      }
+      function saveIncidentReport(){
+        const selected=helpTypes().find(item=>item[0]===state.helpCategory);if(!selected)return;
+        const details=$('#helpDetails')?.value.trim()||'';
+        state.incidentReports.unshift({id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,role:state.role,category:state.helpCategory,label:selected[1],details,at:new Date().toISOString(),stage:state.stage});
+        state.incidentReports=state.incidentReports.slice(0,50);saveLocalRecords();state.helpCategory='';renderHelpDialog('Aviso registrado apenas neste aparelho. Nenhuma equipe foi notificada.');
+      }
       const mapStatus = (message, showSetup = false) => { $('#mapStatus').innerHTML = `${safe(message)}${showSetup ? '<button id="setupMap" type="button">Configurar mapa</button>' : ''}`; $('#mapStatus').hidden = false; };
       function initializeMap() {
         if (!state.mapToken) { mapStatus('Cole seu token público do Mapbox para carregar as ruas.', true); return; }
@@ -482,15 +546,22 @@
             return;
           }
           state.destination=state.destinationText;
-          state.paymentConfirmed=false;state.bookingOpen=false;clearRoute();removeCarMarker();state.stage='searching';render();save();$('#mapTag').textContent='Procurando motorista';
+          state.paymentConfirmed=false;state.activeRideHistoryId=null;state.bookingOpen=false;clearRoute();removeCarMarker();state.stage='searching';render();save();$('#mapTag').textContent='Procurando motorista';
         } catch(error) {button.disabled=false;button.textContent=state.estimateReady?'Confirmar corrida':'Pedir corrida';$('#bookingNotice').textContent=error.message||'Confira os endereços e tente novamente.';}
       }
       function save() { try { localStorage.setItem('vello-demo', JSON.stringify({role:state.role,payment:state.payment,destination:state.destinationFromMap?'':state.destination,destinationText:state.destinationFromMap?'':state.destinationText,pickupText:state.pickupIsCurrent?'':state.pickupText,pickupCoordinates:state.pickupIsCurrent?null:state.pickupCoordinates,pickupIsCurrent:state.pickupIsCurrent})); } catch (_) {} }
       function update(event) {
         const rating=event.target.closest('[data-rating]');if(rating){state.rating=Number(rating.dataset.rating);render();return;}
+        const helpType=event.target.closest('[data-help-type]');if(helpType){state.helpCategory=helpType.dataset.helpType;renderHelpDialog();return;}
         const routeChoice=event.target.closest('[data-action="choose-route"]');if(routeChoice){const index=Number(routeChoice.dataset.routeIndex),route=state.routeChoices[index];if(!route)return;state.selectedRouteIndex=index;state.selectedRoute=route;state.estimatedMinutes=Math.max(1,Math.ceil(route.duration/60));state.fare=7+Math.max(0,state.estimatedMinutes-1);render();drawRoutePreview(route);$('#bookingNotice').textContent=`Rota selecionada: ${state.estimatedMinutes} min · ${fareText()}${state.trafficAware?' com trânsito considerado':', sem dados atuais de trânsito'}. Toque em confirmar para pedir.`;return;}
         const pay=event.target.closest('[data-pay]'); if(pay){state.payment=pay.dataset.pay;render();save();return;}
         const button=event.target.closest('[data-action]'); if(!button)return;
+        if(button.dataset.action==='open-history'){renderHistoryDialog();$('#historyDialog').showModal();return;}
+        if(button.dataset.action==='close-history'){ $('#historyDialog').close();return;}
+        if(button.dataset.action==='open-help'){state.helpCategory='';renderHelpDialog();$('#helpDialog').showModal();return;}
+        if(button.dataset.action==='close-help'){ $('#helpDialog').close();return;}
+        if(button.dataset.action==='back-help'){state.helpCategory='';renderHelpDialog();return;}
+        if(button.dataset.action==='save-report'){saveIncidentReport();return;}
         if(button.dataset.action==='open-booking'){state.bookingOpen=true;render();return;}
         if(button.dataset.action==='close-booking'){state.bookingOpen=false;render();return;}
         if(button.dataset.action==='use-gps'){state.pickupIsCurrent=true;state.pickupText='';state.pickupCoordinates=state.origin;render();if(!state.origin)locateUser().catch(error=>{$('#bookingNotice').textContent=error.message;});return;}
@@ -502,19 +573,22 @@
           reverseGeocode(coords).then(address=>{if(state.mapPickTarget==='pickup'){state.pickupCoordinates=coords;state.pickupText=address;state.pickupIsCurrent=false;}else{state.destinationCoordinates=coords;state.destinationText=address;state.destination=address;state.destinationFromMap=true;}invalidateFareEstimate();state.mapPicking=false;state.mapPickTarget='destination';$('#locationLabel').textContent=address;render();save();}).catch(error=>{button.disabled=false;button.textContent='Concluir local';$('#mapStatus').textContent=error.message;$('#mapStatus').hidden=false;});return;
         }
         if(button.dataset.action==='request-payout'){requestDemoPayout();return;}
-        if(button.dataset.action==='online'){if(!state.online)state.online=true;else{state.stage='request';state.paymentConfirmed=false;state.rideSettled=false;state.lastSettlement=null;}}
+        if(button.dataset.action==='online'){if(!state.online)state.online=true;else{state.stage='request';state.paymentConfirmed=false;state.activeRideHistoryId=null;state.rideSettled=false;state.lastSettlement=null;}}
         if(button.dataset.action==='request'){requestRide(button);return;}
         if(button.dataset.action==='simulate-app-payment'){state.paymentConfirmed=true;enterStage('earnings');return;}
         if(button.dataset.action==='confirm-cash'){state.payment='Dinheiro';state.paymentConfirmed=true;enterStage('earnings');return;}
-        if(button.dataset.action==='confirm-passenger-payment'){state.paymentConfirmed=true;state.stage='done';render();save();routeForStage('done');return;}
+        if(button.dataset.action==='confirm-passenger-payment'){state.paymentConfirmed=true;recordRideHistory('Concluída');state.stage='done';render();save();routeForStage('done');return;}
         if(button.dataset.action==='next'){enterStage(button.dataset.next);return;}
         if(button.dataset.action==='accept-traffic'){const route=state.trafficSuggestion;if(route){state.selectedRoute=route;if(state.trafficSuggestionOrigin)state.driverCurrentPosition=state.trafficSuggestionOrigin;}state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;state.dismissedTrafficSignature='';render();routeForStage('trip');return;}
         if(button.dataset.action==='dismiss-traffic'){const route=state.trafficSuggestion;if(route)state.dismissedTrafficSignature=`${Math.round(route.duration)}:${route.geometry.coordinates[Math.floor(route.geometry.coordinates.length/2)]?.join(',')||''}`;state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;state.lastTrafficQueryAt=Date.now();render();return;}
-        if(button.dataset.action==='finish-review'){state.stage='home';state.bookingOpen=false;state.mapPicking=false;state.destination='';state.destinationText='';state.destinationCoordinates=null;state.destinationFromMap=false;state.pickupText='';state.pickupIsCurrent=true;state.pickupCoordinates=state.origin;state.routeChoices=[];state.selectedRoute=null;state.selectedRouteIndex=0;state.trafficSuggestion=null;state.estimateReady=false;state.estimateKey='';state.fare=7;state.estimatedMinutes=1;state.rating=0;state.comment='';clearRoute();render();save();return;}
-        if(button.dataset.action==='cancel'){stopTrafficWatch();state.stage='home';clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
+        if(button.dataset.action==='finish-review'){const ride=state.rideHistory.find(item=>item.id===state.activeRideHistoryId);if(ride){ride.rating=state.rating;ride.comment=state.comment;saveLocalRecords();}state.stage='home';state.bookingOpen=false;state.mapPicking=false;state.destination='';state.destinationText='';state.destinationCoordinates=null;state.destinationFromMap=false;state.pickupText='';state.pickupIsCurrent=true;state.pickupCoordinates=state.origin;state.routeChoices=[];state.selectedRoute=null;state.selectedRouteIndex=0;state.trafficSuggestion=null;state.estimateReady=false;state.estimateKey='';state.fare=7;state.estimatedMinutes=1;state.rating=0;state.comment='';state.activeRideHistoryId=null;clearRoute();render();save();return;}
+        if(button.dataset.action==='cancel'){if(state.stage!=='home')recordRideHistory('Cancelada');stopTrafficWatch();state.stage='home';state.activeRideHistoryId=null;clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
         render();save();
       }
       $('#screen').addEventListener('click', update);
+      document.querySelector('.top').addEventListener('click',update);
+      $('#historyDialog').addEventListener('click',update);
+      $('#helpDialog').addEventListener('click',update);
       $('#screen').addEventListener('input', (event)=>{
         if(event.target.id==='pickupInput'){state.pickupText=event.target.value;state.pickupIsCurrent=false;state.pickupCoordinates=null;invalidateFareEstimate();}
         if(event.target.id==='destinationInput'){state.destinationText=event.target.value;state.destination=event.target.value;state.destinationCoordinates=null;state.destinationFromMap=false;invalidateFareEstimate();}
@@ -529,6 +603,7 @@
         $('#roleToggle').addEventListener('click',()=>{stopTrafficWatch();clearRoute();removeCarMarker();state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.paymentConfirmed=false;state.online=false;state.bookingOpen=false;state.mapPicking=false;render();save();});
       try{const saved=JSON.parse(localStorage.getItem('vello-demo')||'{}');state.role=saved.role==='driver'?'driver':'passenger';state.payment=saved.payment||state.payment;state.destination=saved.destination||'';state.destinationText=saved.destinationText||saved.destination||'';state.pickupText=saved.pickupText||'';state.pickupCoordinates=Array.isArray(saved.pickupCoordinates)?saved.pickupCoordinates:null;state.pickupIsCurrent=saved.pickupIsCurrent!==false;}catch(_){}
       loadFinance();
+      loadLocalRecords();
       try{state.mapToken=SHARED_MAPBOX_TOKEN||localStorage.getItem('vello-map-token')||'';}catch(_){}
       if(SHARED_MAPBOX_TOKEN)$('#mapSettings').hidden=true;
       if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
