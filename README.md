@@ -16,6 +16,8 @@ Sirva os arquivos desta pasta em um domínio HTTPS. No iPhone, abra a página no
 - O navegador envia ao Mapbox a localização/destino necessários quando a pessoa pede a rota; a coordenada do mapa é consultada para obter o endereço depois de tocar em **Concluir local**. A rota aparece em roxo com marcadores próprios do Vello.
 - Quando encontra o motorista, o mapa mostra o trajeto dele até o ponto de embarque e um carro roxo ilustrado se desloca e vira conforme o caminho. Ao chegar, a rota some e o status fica **Aguardando passageiro**. Depois da confirmação simulada de embarque, o trajeto até o destino aparece.
 - Ao finalizar a viagem, a tela de recibo destaca o valor, mostra o perfil de demonstração do motorista e permite escolher estrelas e escrever um comentário opcional.
+- Os botões discretos no cabeçalho abrem o histórico local de corridas e a área Ajuda e avisos. O histórico mantém corridas concluídas e canceladas; a avaliação e o comentário do passageiro ficam associados à corrida no próprio navegador.
+- Ajuda inclui categorias como acidente, risco de segurança, passageiro que não pagou, falha de pagamento, ausência e objeto esquecido. O relato fica somente neste aparelho e não notifica uma equipe. Em emergência, há atalhos de ligação para 192 (SAMU), 193 (Bombeiros) e 190 (Polícia).
 - O iPhone pede permissão de localização ao abrir o perfil Passageiro; o botão de localização também pode reposicionar o mapa.
 - A estimativa de preço, corrida, motorista e pagamento continuam simulados; esta demo não tem navegação por voz, trânsito em tempo real nem backend.
 
@@ -26,5 +28,6 @@ Sirva os arquivos desta pasta em um domínio HTTPS. No iPhone, abra a página no
 - Recibo final de demonstração com avaliação opcional do motorista.
 - GPS do Safari, origem editável e destino selecionável no mapa.
 - Preferências simples guardadas no próprio iPhone.
+- Histórico de corridas e avisos locais, salvos apenas no navegador deste aparelho.
 
 Não há backend, comunicação entre celulares, login ou cobrança de pagamento. Não é possível instalar esta pasta diretamente: ela precisa primeiro estar publicada em HTTPS.
