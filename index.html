@@ -41,6 +41,7 @@
     .tip-input-row{display:flex;align-items:center;gap:8px}.tip-input-row label{flex:1;font-size:12px;color:#5c5365}.tip-input-row input{width:105px;min-height:40px;border:1px solid #ddd4e7;border-radius:11px;padding:7px 9px;background:#fff;color:#211d26;font:inherit;text-align:right}
     .tip-quick{display:flex;gap:6px;margin-top:9px}.tip-quick button{flex:1;min-width:0;min-height:36px;padding:0 4px;border-radius:11px;background:#eee8f4;color:#50376a;font-size:11px}
     .tip-total-row{margin-top:12px;padding-top:10px;border-top:1px solid #e8e2ed;font-weight:800}
+    .ride-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.ride-actions .secondary{margin-top:0}
     .pix-preview{margin:12px 0;padding:14px;border:1px solid #e8e2ed;border-radius:16px;background:#fff;text-align:center}
     #pixQrCanvas{display:grid;place-items:center;min-height:200px;margin:0 auto 9px}.pix-preview canvas,.pix-preview img{display:block;width:190px!important;height:190px!important;margin:auto;image-rendering:pixelated}
     .pix-preview strong{display:block;font-size:13px}.pix-preview p{margin:5px 0;color:#77717e;font-size:11px}
@@ -206,6 +207,7 @@
   </div>
   <dialog id="historyDialog" class="history-dialog" aria-labelledby="historyTitle"></dialog>
   <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle"></dialog>
+  <dialog id="contactDialog" class="help-dialog" aria-labelledby="contactTitle"><h2 id="contactTitle">Falar com motorista</h2><p>Marina Costa · Honda Fit · demonstração</p><div class="dialog-actions"><button type="button" data-action="call-driver">Ligar para Marina</button><button type="button" data-action="close-contact">Fechar</button></div><label for="driverMessage" class="review-label">Mensagem</label><textarea class="review-comment" id="driverMessage" maxlength="240" placeholder="Escreva uma mensagem…"></textarea><button type="button" class="primary" data-action="send-driver-message">Enviar mensagem de teste</button><p id="contactNotice" class="small" aria-live="polite">Contato simulado: mensagens e ligações não chegam a um motorista real.</p></dialog>
   <dialog id="mapDialog"><form id="mapTokenForm"><h2>Ativar mapa do Vello</h2><p>Cole um token <strong>público</strong> do Mapbox (começa com <code>pk.</code>). Ele ficará salvo apenas neste navegador. Ao pedir uma rota, a origem e o destino serão enviados ao Mapbox.</p><input id="mapTokenInput" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="pk.eyJ..." aria-label="Token público do Mapbox"><div class="dialog-actions"><button type="button" id="cancelMapSetup">Cancelar</button><button type="submit" class="primary">Salvar token</button></div></form></dialog>
   <script>
     // Public default token for this demo. Its Mapbox account has usage limits and no billing method.
@@ -564,7 +566,10 @@
             paymentControls=`${tipControls}${state.pixQrMode?`${pixPreview}<button class="primary" data-action="confirm-passenger-payment">Simular PIX pago</button>`:`<button class="primary" type="button" data-action="generate-pix" data-include-tip="true" ${tipValue()<=0?'disabled':''}>Gerar QR com gorjeta</button><button class="secondary" type="button" data-action="generate-pix" data-include-tip="false">Gerar QR sem gorjeta</button>`}`;
           }else if(state.stage==='payment'&&!driver){paymentControls=`${tipControls}<button class="primary" data-action="confirm-passenger-payment">${state.payment==='Dinheiro'?'Confirmar pagamento em dinheiro':'Simular pagamento no cartão'}</button>`;}
           else{paymentControls=`<button class="primary" data-action="next" data-next="${item[4]}">${item[2]}</button>`;}
-          $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div>${trafficAlert}<p class="stage-copy">${item[1]}</p>${settlementMarkup}${paymentControls}${final?'':'<button class="secondary" data-action="cancel">Cancelar demonstração</button>'}</section>`;
+          const passengerRideActions=!driver&&['found','arrived','trip'].includes(state.stage)?`<div class="ride-actions"><button class="secondary" type="button" data-action="contact-driver">Falar com motorista</button><button class="secondary" type="button" data-action="share-trip">Compartilhar viagem</button></div>`:'';
+          const canPassengerCancel=!driver&&['searching','found','arrived'].includes(state.stage);
+          const cancelButton=final?'':canPassengerCancel?'<button class="secondary" data-action="cancel">Cancelar corrida</button>':driver?'<button class="secondary" data-action="cancel">Sair da demonstração</button>':'';
+          $('#screen').innerHTML=`<section class="panel"><div class="row"><div class="stage-icon">${item[3]}</div><div><div class="strong">${item[0]}</div><div class="small">Vello Econômico · teste</div></div></div>${trafficAlert}<p class="stage-copy">${item[1]}</p>${settlementMarkup}${paymentControls}${passengerRideActions}${cancelButton}</section>`;
           if(state.stage==='payment'&&!driver&&state.pixQrMode)drawDemoPixQr();
         }
       }
@@ -599,6 +604,18 @@
         } catch(error) {button.disabled=false;button.textContent=state.estimateReady?'Confirmar corrida':'Pedir corrida';$('#bookingNotice').textContent=error.message||'Confira os endereços e tente novamente.';}
       }
       function save() { try { localStorage.setItem('vello-demo', JSON.stringify({role:state.role,payment:state.payment,destination:state.destinationFromMap?'':state.destination,destinationText:state.destinationFromMap?'':state.destinationText,pickupText:state.pickupIsCurrent?'':state.pickupText,pickupCoordinates:state.pickupIsCurrent?null:state.pickupCoordinates,pickupIsCurrent:state.pickupIsCurrent})); } catch (_) {} }
+      async function shareTrip(){
+        const status={searching:'Procurando motorista',found:'Motorista a caminho',arrived:'Motorista aguardando no embarque',trip:'Viagem em andamento'}[state.stage]||'Corrida Vello';
+        const origin=state.pickupIsCurrent?'Minha localização':(state.pickupText||'Ponto de embarque');
+        const destination=state.destinationText||state.destination||'Destino selecionado';
+        const text=`Minha viagem no Vello (demonstração)\nStatus: ${status}\nOrigem: ${origin}\nDestino: ${destination}\nValor estimado: ${fareText()}`;
+        try{
+          if(navigator.share){await navigator.share({title:'Minha viagem Vello',text});return;}
+          if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
+          else{const input=document.createElement('textarea');input.value=text;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.append(input);input.select();const copied=document.execCommand('copy');input.remove();if(!copied)throw new Error('copy unavailable');}
+          window.alert('Resumo da viagem copiado. Cole em uma mensagem para compartilhar.');
+        }catch(error){if(error?.name!=='AbortError')window.alert('Não foi possível compartilhar agora.');}
+      }
       function update(event) {
         const rating=event.target.closest('[data-rating]');if(rating){state.rating=Number(rating.dataset.rating);render();return;}
         const helpType=event.target.closest('[data-help-type]');if(helpType){state.helpCategory=helpType.dataset.helpType;renderHelpDialog();return;}
@@ -608,6 +625,11 @@
         if(button.dataset.action==='open-history'){renderHistoryDialog();$('#historyDialog').showModal();return;}
         if(button.dataset.action==='close-history'){ $('#historyDialog').close();return;}
         if(button.dataset.action==='open-help'){state.helpCategory='';renderHelpDialog();$('#helpDialog').showModal();return;}
+        if(button.dataset.action==='contact-driver'){$('#contactNotice').textContent='Contato simulado: mensagens e ligações não chegam a um motorista real.';$('#contactDialog').showModal();return;}
+        if(button.dataset.action==='close-contact'){$('#contactDialog').close();return;}
+        if(button.dataset.action==='call-driver'){$('#contactNotice').textContent='Ligação simulada. A chamada real não está disponível nesta demonstração.';return;}
+        if(button.dataset.action==='send-driver-message'){const message=$('#driverMessage').value.trim();$('#contactNotice').textContent=message?'Mensagem de teste registrada somente nesta tela; o motorista não recebeu.':'Digite uma mensagem antes de enviar.';if(message)$('#driverMessage').value='';return;}
+        if(button.dataset.action==='share-trip'){shareTrip();return;}
         if(button.dataset.action==='close-help'){ $('#helpDialog').close();return;}
         if(button.dataset.action==='back-help'){state.helpCategory='';renderHelpDialog();return;}
         if(button.dataset.action==='save-report'){saveIncidentReport();return;}
@@ -636,13 +658,14 @@
         if(button.dataset.action==='accept-traffic'){const route=state.trafficSuggestion;if(route){state.selectedRoute=route;if(state.trafficSuggestionOrigin)state.driverCurrentPosition=state.trafficSuggestionOrigin;}state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;state.dismissedTrafficSignature='';render();routeForStage('trip');return;}
         if(button.dataset.action==='dismiss-traffic'){const route=state.trafficSuggestion;if(route)state.dismissedTrafficSignature=`${Math.round(route.duration)}:${route.geometry.coordinates[Math.floor(route.geometry.coordinates.length/2)]?.join(',')||''}`;state.trafficSuggestion=null;state.trafficSuggestionOrigin=null;state.lastTrafficQueryAt=Date.now();render();return;}
         if(button.dataset.action==='finish-review'){const ride=state.rideHistory.find(item=>item.id===state.activeRideHistoryId);if(ride){ride.rating=state.rating;ride.comment=state.comment;saveLocalRecords();}state.stage='home';state.bookingOpen=false;state.mapPicking=false;state.destination='';state.destinationText='';state.destinationCoordinates=null;state.destinationFromMap=false;state.pickupText='';state.pickupIsCurrent=true;state.pickupCoordinates=state.origin;state.routeChoices=[];state.selectedRoute=null;state.selectedRouteIndex=0;state.trafficSuggestion=null;state.estimateReady=false;state.estimateKey='';state.fare=7;state.estimatedMinutes=1;state.rating=0;state.comment='';state.activeRideHistoryId=null;clearRoute();render();save();return;}
-        if(button.dataset.action==='cancel'){if(state.stage!=='home')recordRideHistory('Cancelada');stopTrafficWatch();state.stage='home';state.activeRideHistoryId=null;clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
+        if(button.dataset.action==='cancel'){if(state.role==='passenger'&&!window.confirm('Tem certeza que deseja cancelar esta corrida?'))return;if(state.stage!=='home')recordRideHistory('Cancelada');stopTrafficWatch();state.stage='home';state.activeRideHistoryId=null;state.bookingOpen=false;state.tip=0;state.tipExpanded=false;state.pixQrMode='';clearRoute();removeCarMarker();$('#mapStatus').hidden=true;$('#mapTag').textContent='Vello Econômico · mapa real';}
         render();save();
       }
       $('#screen').addEventListener('click', update);
       document.querySelector('.top').addEventListener('click',update);
       $('#historyDialog').addEventListener('click',update);
       $('#helpDialog').addEventListener('click',update);
+      $('#contactDialog').addEventListener('click',update);
       $('#screen').addEventListener('input', (event)=>{
         if(event.target.id==='tipInput'){state.tip=cents(Math.max(0,Number(event.target.value)||0));const total=$('#paymentTotal');if(total)total.textContent=money.format(totalValue());const withTip=$('[data-action="generate-pix"][data-include-tip="true"]');if(withTip)withTip.disabled=tipValue()<=0;}
         if(event.target.id==='pickupInput'){state.pickupText=event.target.value;state.pickupIsCurrent=false;state.pickupCoordinates=null;invalidateFareEstimate();}
