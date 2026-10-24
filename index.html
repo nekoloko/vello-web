@@ -282,12 +282,25 @@
         state.incidentReports.unshift({id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,role:state.role,category:state.helpCategory,label:selected[1],details,at:new Date().toISOString(),stage:state.stage});
         state.incidentReports=state.incidentReports.slice(0,50);saveLocalRecords();state.helpCategory='';renderHelpDialog('Aviso registrado apenas neste aparelho. Nenhuma equipe foi notificada.');
       }
+      function demoPixPayload(){
+        return `VELLO TESTE - PIX NAO PAGAVEL | CORRIDA R$${Number(state.fare).toFixed(2)} | GORJETA R$${tipValue().toFixed(2)} | TOTAL R$${totalValue().toFixed(2)}`;
+      }
+      async function copyDemoPixCode(button){
+        const payload=demoPixPayload();
+        try{
+          if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(payload);
+          else{
+            const input=document.createElement('textarea');input.value=payload;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.append(input);input.select();
+            const copied=document.execCommand('copy');input.remove();if(!copied)throw new Error('copy unavailable');
+          }
+          button.textContent='Código de teste copiado';button.setAttribute('aria-live','polite');
+        }catch(_){button.textContent='Não foi possível copiar · tente novamente';button.setAttribute('aria-live','polite');}
+      }
       function drawDemoPixQr(){
         const container=$('#pixQrCanvas');if(!container)return;
         container.replaceChildren();
         if(!window.QRCode){container.textContent='O gerador visual do QR não carregou. Tente novamente com conexão.';return;}
-        const payload=`VELLO TESTE - PIX NAO PAGAVEL | CORRIDA R$${Number(state.fare).toFixed(2)} | GORJETA R$${tipValue().toFixed(2)} | TOTAL R$${totalValue().toFixed(2)}`;
-        new window.QRCode(container,{text:payload,width:190,height:190,colorDark:'#21152e',colorLight:'#ffffff',correctLevel:window.QRCode.CorrectLevel.M});
+        new window.QRCode(container,{text:demoPixPayload(),width:190,height:190,colorDark:'#21152e',colorLight:'#ffffff',correctLevel:window.QRCode.CorrectLevel.M});
       }
       const mapStatus = (message, showSetup = false) => { $('#mapStatus').innerHTML = `${safe(message)}${showSetup ? '<button id="setupMap" type="button">Configurar mapa</button>' : ''}`; $('#mapStatus').hidden = false; };
       function initializeMap() {
@@ -535,7 +548,7 @@
         const flows = driver ? {request:['Nova solicitação',`Alex · Praça Central\nDestino: Centro · 1,2 km · ${fareText()}`,'Aceitar corrida','▰','pickup'],pickup:['Indo buscar o passageiro','Rota simulada até o ponto de embarque.','Cheguei ao embarque','⌖','awaiting'],awaiting:['Aguardando passageiro','Você chegou ao ponto. Confirme quando o passageiro entrar no carro.','Confirmar passageiro a bordo','●','trip'],trip:['Corrida em andamento','Percurso concluído. Agora confirme o pagamento para encerrar a corrida.','Ir para pagamento','➤','payment'],payment:driverPaymentFlow,earnings:['Corrida concluída',`${fareText()} · pagamento confirmado em ${state.payment}.`,'Voltar ao início','✓','home']} : {searching:['Procurando motorista','Encontrando um motorista perto de você…','Simular motorista encontrado','⌕','found'],found:['Motorista a caminho','Marina · Honda Fit\nChegada estimada: 4 min','Simular chegada do motorista','▰','arrived'],arrived:['Aguardando passageiro','O motorista chegou. A rota ficará oculta até ele confirmar que você entrou no carro.','Simular confirmação do motorista: entrei no carro','●','trip'],trip:['Viagem em andamento',`Percurso concluído. Total: ${fareText()}`,'Ir para pagamento','➤','payment'],payment:passengerPaymentFlow};
         const receipt = `<section class="receipt-sheet"><div class="receipt-kicker">Corrida finalizada</div><div class="receipt-amount">${money.format(totalValue())}</div><div class="receipt-payment">Total pago · ${safe(state.payment)}</div><div class="receipt-breakdown"><div><span>Corrida</span><strong>${fareText()}</strong></div>${tipValue()>0?`<div><span>Gorjeta · 100% para o motorista</span><strong>${money.format(tipValue())}</strong></div>`:''}</div><div class="receipt-divider"></div><div class="driver-card"><img class="driver-photo" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto de Marina Costa" onerror="this.hidden=true;this.nextElementSibling.style.display='grid'"><div class="driver-fallback" aria-hidden="true">MC</div><div><div class="driver-name">Marina Costa</div><div class="driver-car">Honda Fit · motorista Vello</div></div></div><div class="receipt-divider"></div><p class="review-label">Como foi sua corrida?</p><div class="review-stars" role="radiogroup" aria-label="Avaliação do motorista">${[1,2,3,4,5].map(value=>`<button type="button" data-rating="${value}" aria-label="${value} estrela${value>1?'s':''}" aria-pressed="${state.rating===value}" class="${state.rating>=value?'active':''}">★</button>`).join('')}</div><label class="review-label" for="reviewComment">Comentário (opcional)</label><textarea class="review-comment" id="reviewComment" maxlength="300" placeholder="Conte como foi sua experiência…">${safe(state.comment)}</textarea><button class="primary review-submit" data-action="finish-review">Enviar avaliação de teste</button></section>`;
         const tipControls=`<section class="tip-box"><div class="tip-fare-row"><span>Valor da corrida</span><div style="display:flex;align-items:center;gap:8px"><strong>${fareText()}</strong><button class="tip-plus" type="button" data-action="toggle-tip" aria-label="${state.tipExpanded?'Fechar gorjeta':'Adicionar gorjeta'}" title="Gorjeta">${state.tipExpanded?'−':'+'}</button></div></div>${state.tipExpanded?`<div class="tip-editor"><div class="tip-input-row"><label for="tipInput">Gorjeta opcional · vai inteira ao motorista</label><input id="tipInput" type="number" min="0" step="0.01" inputmode="decimal" value="${tipValue().toFixed(2)}" aria-label="Valor da gorjeta em reais"></div><div class="tip-quick" aria-label="Adicionar gorjeta">${[2,10,50,100].map(amount=>`<button type="button" data-action="add-tip" data-tip-add="${amount}">+ ${money.format(amount).replace(',00','')}</button>`).join('')}</div></div>`:`<p class="small" style="margin:6px 0 0">Gorjeta opcional · toque no + para adicionar.</p>`}<div class="tip-total-row"><span>Valor total</span><strong id="paymentTotal">${money.format(totalValue())}</strong></div></section>`;
-        const pixPreview=state.pixQrMode?`<section class="pix-preview"><div id="pixQrCanvas" role="img" aria-label="QR de demonstração, sem cobrança PIX real"></div><strong>${money.format(totalValue())}</strong><p>QR de demonstração: contém apenas texto de teste e não é um PIX pagável.</p><button class="secondary" type="button" data-action="edit-pix">Alterar valor ou QR</button></section>`:'';
+        const pixPreview=state.pixQrMode?`<section class="pix-preview"><div id="pixQrCanvas" role="img" aria-label="QR de demonstração, sem cobrança PIX real"></div><strong>${money.format(totalValue())}</strong><button class="secondary" type="button" data-action="copy-pix-code">Copiar código (teste)</button><p>O código copiado e o QR contêm apenas texto de teste; não são um PIX pagável.</p><button class="secondary" type="button" data-action="edit-pix">Alterar valor ou QR</button></section>`:'';
         document.body.classList.toggle('passenger-map-home',!driver&&state.stage==='home'&&!state.bookingOpen&&!state.mapPicking);
         document.body.classList.toggle('passenger-booking',!driver&&state.stage==='home'&&state.bookingOpen&&!state.mapPicking);
         document.body.classList.toggle('passenger-picker',!driver&&state.stage==='home'&&state.mapPicking);
@@ -601,6 +614,7 @@
         if(button.dataset.action==='toggle-tip'){state.pixQrMode='';state.tipExpanded=!state.tipExpanded;render();return;}
         if(button.dataset.action==='add-tip'){state.tip=cents(Math.max(0,Number($('#tipInput')?.value??state.tip)||0)+Number(button.dataset.tipAdd||0));state.pixQrMode='';state.tipExpanded=true;render();return;}
         if(button.dataset.action==='generate-pix'){if(button.dataset.includeTip==='false')state.tip=0;else state.tip=cents(Math.max(0,Number($('#tipInput')?.value??state.tip)||0));state.pixQrMode=button.dataset.includeTip==='false'?'without-tip':'with-tip';state.tipExpanded=false;render();return;}
+        if(button.dataset.action==='copy-pix-code'){copyDemoPixCode(button);return;}
         if(button.dataset.action==='edit-pix'){state.pixQrMode='';state.tipExpanded=true;render();return;}
         if(button.dataset.action==='open-booking'){state.bookingOpen=true;render();return;}
         if(button.dataset.action==='close-booking'){state.bookingOpen=false;render();return;}
