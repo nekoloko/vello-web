@@ -26,6 +26,8 @@
   </div>
   <dialog id="mapDialog"><form id="mapTokenForm"><h2>Ativar mapa do Vello</h2><p>Cole um token <strong>público</strong> do Mapbox (começa com <code>pk.</code>). Ele ficará salvo apenas neste navegador. Ao pedir uma rota, a origem e o destino serão enviados ao Mapbox.</p><input id="mapTokenInput" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="pk.eyJ..." aria-label="Token público do Mapbox"><div class="dialog-actions"><button type="button" id="cancelMapSetup">Cancelar</button><button type="submit" class="primary">Salvar token</button></div></form></dialog>
   <script>
+    // Public default token for this demo. Its Mapbox account has usage limits and no billing method.
+    const SHARED_MAPBOX_TOKEN = 'pk.eyJ1IjoibmVrb2xva28iLCJhIjoiY212bHJ2OHh4MTY5ZzM0cHgyZnZnd3Q2ciJ9.I8ZYrymtqRW-Y-rpe1-pag';
     (() => {
       const $ = (selector) => document.querySelector(selector);
       const state = { role: 'passenger', stage: 'home', payment: 'PIX', destination: '', online: false, origin: null, map: null, mapToken: '', route: null, markers: [] };
@@ -138,7 +140,8 @@
       $('#mapTokenForm').addEventListener('submit',event=>{event.preventDefault();const token=$('#mapTokenInput').value.trim();if(!token.startsWith('pk.')){mapStatus('Use um token público Mapbox, que começa com pk.',true);return;}$('#mapDialog').close();setMapToken(token);});
       $('#roleToggle').addEventListener('click',()=>{state.role=state.role==='passenger'?'driver':'passenger';state.stage='home';state.online=false;render();save();});
       try{const saved=JSON.parse(localStorage.getItem('vello-demo')||'{}');state.role=saved.role==='driver'?'driver':'passenger';state.payment=saved.payment||state.payment;state.destination=saved.destination||'';}catch(_){}
-      try{state.mapToken=localStorage.getItem('vello-map-token')||'';}catch(_){}
+      try{state.mapToken=SHARED_MAPBOX_TOKEN||localStorage.getItem('vello-map-token')||'';}catch(_){}
+      if(SHARED_MAPBOX_TOKEN)$('#mapSettings').hidden=true;
       if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
       render();
       initializeMap();
